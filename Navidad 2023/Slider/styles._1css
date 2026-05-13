@@ -1,0 +1,78 @@
+/* Estilos para el contenedor del slider */
+.swiper-container {
+  width: 100%;
+  height: 100vh; /* Utilizamos el 100% de la altura de la ventana */
+  margin: 0; /* Eliminamos el margen para evitar desplazamiento vertical */
+  padding: 0; /* Eliminamos el padding para evitar desplazamiento vertical */
+}
+
+/* Estilos para cada diapositiva del slider */
+.swiper-slide {
+  width: 100%;
+  height: 100%; /* Utilizamos el 100% de la altura del contenedor */
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos para las imágenes dentro de las diapositivas */
+.swiper-slide img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Estilos para los botones de desplazamiento */
+.swiper-button-prev, .swiper-button-next {
+  background-color: rgba(255, 255, 255, 0.4); /* Color de fondo */
+  width: 2.5em; /* Ancho del botón en unidades em */
+  height: 2.5em; /* Altura del botón en unidades em */
+  border-radius: 50%; /* Borde redondeado para que tengan forma circular */
+  color: #000000; /* Color del icono */
+  font-size: 1.5em; /* Tamaño del icono en unidades em */
+  /* Agregar efecto 3D */
+  transform: translateZ(0);
+  transition: transform 0.3s;
+  /* Otros estilos según tus preferencias */
+}
+
+/* Efecto de pulsado al hacer clic en los botones */
+.swiper-button-prev:active, .swiper-button-next:active {
+  transform: scale(0.9); /* Reducir ligeramente el tamaño al hacer clic */
+  /* Otros estilos para el efecto de pulsado */
+}
+
+/* Efecto de pulsado al pasar el cursor sobre los botones */
+.swiper-button-prev:hover, .swiper-button-next:hover {
+  background-color: #777171; /* Cambiar el color de fondo al pasar el cursor sobre los botones */
+  /* Otros estilos para el efecto de pulsado */
+}
+/* Estilos para la paginación */
+.swiper-pagination {
+  position: absolute;
+  z-index: 10;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Estilos para los botones de paginación */
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  border-radius: 100%;
+  background: #000;
+  opacity: 0.5;
+  margin: 0 2px;
+  transition: opacity 0.2s;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+}
