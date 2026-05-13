@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Romería de San Ramón – Ponte Ledesma</title>
+    <meta
+      name="description"
+      content="Romería de San Ramón en Ponte Ledesma: tradición, música y devoción. Galería de fotos y detalles del evento."
+    />
+    <meta property="og:title" content="Romería de San Ramón – Ponte Ledesma" />
+    <meta
+      property="og:description"
+      content="Tradición, música y devoción en las Ínsuas de Gres. Descubre la galería y la banda musical."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="fotos/1.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="fotos/1.jpg" />
+
+    <!-- Bootstrap 5.3 CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- Swiper -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+    />
+    <!-- CSS propio -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body data-bs-spy="scroll" data-bs-target="#mainNav">
+    <!-- NAVEGACIÓN -->
+    <nav
+      id="mainNav"
+      class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
+    >
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">Romería San Ramón</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#inicio">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#acerca">Acerca de</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#galeria">Galería</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#banda">Banda</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contacto">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section
+      id="inicio"
+      class="hero d-flex align-items-center text-center text-white"
+    >
+      <div id="heroParticles"></div>
+      <div class="container">
+        <h1 class="display-3 fw-bold" data-aos="fade-up">
+          Romería de San Ramón
+        </h1>
+        <p class="lead mb-4" data-aos="fade-up" data-aos-delay="200">
+          Una tradición ancestral, una celebración llena de vida
+        </p>
+        <div
+          id="countdown"
+          class="countdown"
+          data-aos="fade-up"
+          data-aos-delay="300"
+        ></div>
+        <a
+          href="#galeria"
+          class="btn btn-light btn-lg"
+          data-aos="fade-up"
+          data-aos-delay="400"
+          >Descubre más</a
+        >
+      </div>
+    </section>
+
+    <!-- ACERCA DE -->
+    <section id="acerca" class="py-5 bg-light">
+      <div class="container" data-aos="fade-up">
+        <h2 class="text-center mb-4">Acerca de la Romería</h2>
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <p class="lead">
+              La Romería de San Ramón se celebra el 31 de agosto en las Ínsuas
+              de Gres (Ponte Ledesma). San Ramón, patrón del municipio, reúne
+              cada año a miles de peregrinos en un entorno natural único.
+            </p>
+            <p class="lead">
+              Es un pilar de la cultura local donde conviven fe, música y
+              naturaleza. La
+              <strong>Unión Musical Ponteledesma</strong> acompaña la jornada
+              con marchas y piezas folclóricas gallegas.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section id="galeria" class="py-5">
+      <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Nuestra Galería</h2>
+        <!-- Carrusel destacado -->
+        <div class="swiper mySwiper mb-5" data-aos="fade-up">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="fotos/1.jpg" alt="Destacada 1" loading="lazy" />
+            </div>
+            <div class="swiper-slide">
+              <img src="fotos/2.jpg" alt="Destacada 2" loading="lazy" />
+            </div>
+            <div class="swiper-slide">
+              <img src="fotos/3.jpg" alt="Destacada 3" loading="lazy" />
+            </div>
+            <div class="swiper-slide">
+              <img src="fotos/4.jpg" alt="Destacada 4" loading="lazy" />
+            </div>
+            <div class="swiper-slide">
+              <img src="fotos/5.jpg" alt="Destacada 5" loading="lazy" />
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+        <div class="gallery-grid">
+          <!-- Fotos reales disponibles en /fotos -->
+          <div class="gallery-item" data-aos="zoom-in">
+            <a
+              href="fotos/1.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 1"
+            >
+              <img src="fotos/1.jpg" alt="Romería 1" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Romería</h5>
+              <p>Momentos únicos de devoción y tradición.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+            <a
+              href="fotos/2.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 2"
+            >
+              <img src="fotos/2.jpg" alt="Romería 2" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>La Fiesta</h5>
+              <p>Música, colores y alegría compartida.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+            <a
+              href="fotos/3.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 3"
+            >
+              <img src="fotos/3.jpg" alt="Romería 3" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Tradición</h5>
+              <p>Costumbres que perduran en el tiempo.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in">
+            <a
+              href="fotos/4.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 4"
+            >
+              <img src="fotos/4.jpg" alt="Romería 4" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Entorno</h5>
+              <p>El paisaje que arropa la celebración.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+            <a
+              href="fotos/5.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 5"
+            >
+              <img src="fotos/5.jpg" alt="Romería 5" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Gastronomía</h5>
+              <p>Sabores que nos reúnen a la mesa.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
+            <a
+              href="fotos/6.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 6"
+            >
+              <img src="fotos/6.jpg" alt="Romería 6" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Devoción</h5>
+              <p>Fe y emoción a flor de piel.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in">
+            <a
+              href="fotos/7.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 7"
+            >
+              <img src="fotos/7.jpg" alt="Romería 7" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Familia</h5>
+              <p>Recuerdos que quedan para siempre.</p>
+            </div>
+          </div>
+          <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
+            <a
+              href="fotos/8.jpg"
+              class="glightbox"
+              data-gallery="romeria"
+              data-title="Romería – 8"
+            >
+              <img src="fotos/8.jpg" alt="Romería 8" loading="lazy" />
+            </a>
+            <div class="gallery-caption">
+              <h5>Comunidad</h5>
+              <p>La gente que da vida a la romería.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANDA -->
+    <section id="banda" class="py-5 bg-dark text-white">
+      <div class="container" data-aos="fade-up">
+        <h2 class="text-center mb-4">La Banda Musical</h2>
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            <p class="lead">
+              La <strong>Unión Musical Ponteledesma</strong>, fundada en 1920,
+              acompaña la romería con marchas militares y piezas folclóricas
+              gallegas que emocionan a grandes y pequeños.
+            </p>
+            <p class="lead">
+              Dirigida por un maestro titulado, la banda mantiene viva la
+              tradición y la educación musical en la comarca.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="py-5 bg-light">
+      <div class="container" data-aos="fade-up">
+        <h2 class="text-center mb-4">Contáctanos</h2>
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <p>
+              <strong>Email:</strong>
+              <a href="mailto:info@romeriasanramon.gal"
+                >info@romeriasanramon.gal</a
+              >
+            </p>
+            <p>
+              <strong>Teléfono:</strong>
+              <a href="tel:+34986123456">+34 986 123 456</a>
+            </p>
+            <div class="mt-4">
+              <a href="#" class="btn btn-outline-dark me-2">Facebook</a>
+              <a href="#" class="btn btn-outline-dark">Instagram</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white text-center py-3">
+      <div class="container">
+        <small
+          >&copy; <span id="year"></span> Romería de San Ramón – Ponte
+          Ledesma</small
+        >
+      </div>
+    </footer>
+
+    <!-- Volver arriba -->
+    <a href="#" class="back-to-top" id="backToTop">↑</a>
+
+    <!-- Aviso de cookies -->
+    <div
+      class="cookie-banner"
+      id="cookieBanner"
+      role="dialog"
+      aria-live="polite"
+      aria-label="Aviso de cookies"
+    >
+      <div class="cookie-inner container">
+        <p class="mb-0">
+          Usamos cookies propias con fines funcionales y de análisis anónimo. Al
+          continuar, aceptas su uso.
+          <a href="#" class="cookie-link">Más info</a>
+        </p>
+        <button
+          class="btn btn-sm btn-light"
+          id="acceptCookies"
+          aria-label="Aceptar cookies"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+
+    <!-- WhatsApp flotante -->
+    <a
+      href="#"
+      class="wa-float"
+      target="_blank"
+      rel="noopener"
+      aria-label="Contactar por WhatsApp"
+      data-wa-phone="34600111222"
+      data-wa-text="Hola, quiero información sobre la Romería de San Ramón"
+      data-wa-open="9"
+      data-wa-close="21"
+    >
+      <svg
+        width="26"
+        height="26"
+        viewBox="0 0 32 32"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M19.11 17.51c-.27-.14-1.57-.77-1.81-.86-.24-.09-.42-.14-.6.14-.18.27-.69.86-.85 1.03-.16.18-.31.2-.58.07-.27-.14-1.13-.42-2.16-1.34-.8-.71-1.35-1.59-1.51-1.86-.16-.27-.02-.42.12-.56.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.05-.34-.02-.47-.07-.14-.6-1.45-.82-1.99-.22-.53-.44-.46-.6-.46-.16 0-.34-.02-.52-.02-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.27 0 1.34.97 2.64 1.11 2.82.14.18 1.9 2.9 4.61 4.06.64.27 1.14.43 1.53.55.64.2 1.23.17 1.7.1.52-.08 1.57-.64 1.79-1.27.22-.63.22-1.17.16-1.27-.06-.1-.24-.16-.51-.29z"
+          fill="#fff"
+        />
+        <path
+          d="M26.84 5.16C24.08 2.39 20.56 1 16.86 1 9.62 1 3.71 6.92 3.71 14.16c0 2.29.6 4.5 1.73 6.46L3 31l10.67-2.8c1.89 1.03 4.03 1.58 6.23 1.58 7.24 0 13.16-5.92 13.16-13.16 0-3.52-1.37-6.82-3.83-9.27zM19.9 27.7c-1.95 0-3.86-.5-5.55-1.46l-.4-.23-6.33 1.66 1.69-6.17-.26-.4c-1.06-1.67-1.62-3.6-1.62-5.59 0-5.8 4.72-10.52 10.52-10.52 2.81 0 5.45 1.09 7.44 3.08 1.99 1.99 3.08 4.63 3.08 7.44 0 5.8-4.72 10.52-10.52 10.52z"
+          fill="#fff"
+        />
+      </svg>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- GLightbox -->
+    <link
+      rel="preload"
+      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+    /></noscript>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <!-- tsParticles -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@3/tsparticles.bundle.min.js"></script>
+    <!-- VanillaTilt -->
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+    <!-- Swiper -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
+  </body>
+</html>
