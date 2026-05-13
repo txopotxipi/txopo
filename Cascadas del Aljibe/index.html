@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruta Senderista Las Cascadas del Aljibe</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-gray-800 text-white py-4">
+      <div class="container mx-auto flex justify-between items-center px-4">
+        <h1 class="text-2xl font-bold">Las Cascadas del Aljibe</h1>
+        <nav>
+          <ul class="flex space-x-4">
+            <li><a href="#fotos" class="hover:text-gray-400">Fotos</a></li>
+            <li><a href="#videos" class="hover:text-gray-400">Vídeos</a></li>
+            <li>
+              <a href="#contacto" class="hover:text-gray-400">Contacto</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section
+      id="home"
+      class="bg-cover bg-center h-screen flex items-center justify-center"
+      style="
+        background-image: url('https://images.unsplash.com/photo-1567391834611-8d0797927d39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+      "
+    >
+      <div class="text-center bg-black bg-opacity-50 p-10 rounded-lg">
+        <h2 class="text-5xl font-bold text-white">
+          Bienvenidos a Las Cascadas del Aljibe
+        </h2>
+        <p class="text-xl text-white mt-4">
+          Descubre la belleza de este impresionante sendero.
+        </p>
+      </div>
+    </section>
+
+    <!-- Fotos Section -->
+    <section id="fotos" class="py-12">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">Fotos</h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          <!-- Generar imágenes -->
+          <!-- Esto se puede hacer manualmente o con un script de preprocesamiento -->
+          <div class="relative">
+            <img
+              src="fotos/1.jpg"
+              alt="Foto 1"
+              class="w-full h-full object-cover rounded-lg cursor-pointer"
+              onclick="openSlider(0)"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity duration-300 rounded-lg"
+            ></div>
+          </div>
+          <div class="relative">
+            <img
+              src="fotos/2.jpg"
+              alt="Foto 2"
+              class="w-full h-full object-cover rounded-lg cursor-pointer"
+              onclick="openSlider(1)"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity duration-300 rounded-lg"
+            ></div>
+          </div>
+          <!-- Continuar con el resto de las imágenes hasta 22.jpg -->
+          <!-- ... -->
+          <div class="relative">
+            <img
+              src="fotos/22.jpg"
+              alt="Foto 22"
+              class="w-full h-full object-cover rounded-lg cursor-pointer"
+              onclick="openSlider(21)"
+            />
+            <div
+              class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity duration-300 rounded-lg"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slider Modal -->
+    <div
+      id="sliderModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-75 justify-center items-center z-50"
+    >
+      <div class="relative w-full max-w-6xl">
+        <button
+          onclick="closeSlider()"
+          class="absolute top-4 right-4 bg-white rounded-full p-2 text-gray-800 hover:bg-gray-200 transition duration-300"
+        >
+          X
+        </button>
+        <button
+          onclick="prevImage()"
+          class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white rounded-full p-2 text-gray-800 hover:bg-gray-200 transition duration-300"
+        >
+          ‹
+        </button>
+        <button
+          onclick="nextImage()"
+          class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white rounded-full p-2 text-gray-800 hover:bg-gray-200 transition duration-300"
+        >
+          ›
+        </button>
+        <button
+          onclick="toggleAutoSlide()"
+          class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full p-2 text-gray-800 hover:bg-gray-200 transition duration-300"
+        >
+          <span id="autoSlideText">Play</span>
+        </button>
+        <div id="sliderImages" class="flex overflow-hidden">
+          <!-- Generar imágenes para el slider -->
+          <img src="fotos/1.jpg" alt="Foto 1" class="w-full h-auto" />
+          <img src="fotos/2.jpg" alt="Foto 2" class="w-full h-auto" />
+          <!-- Continuar con el resto de las imágenes hasta 22.jpg -->
+          <!-- ... -->
+          <img src="fotos/22.jpg" alt="Foto 22" class="w-full h-auto" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Videos Section -->
+    <section id="videos" class="py-12 bg-gray-800 text-white">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">Vídeos</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <!-- Generar vídeos -->
+          <div class="relative">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/VIDEO_ID_1"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="relative">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/VIDEO_ID_2"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <!-- Continuar con el resto de los vídeos hasta 5 -->
+          <!-- ... -->
+          <div class="relative">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/VIDEO_ID_5"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contacto Section -->
+    <section id="contacto" class="py-12">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-8">Contacto</h2>
+        <p class="text-lg">
+          Si tienes alguna pregunta o quieres reservar una visita, no dudes en
+          contactarnos.
+        </p>
+        <div class="mt-8">
+          <a
+            href="mailto:contacto@cascadasdelaljibe.com"
+            class="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800"
+            >Email</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4">
+      <div class="container mx-auto px-4 text-center">
+        <p>
+          &copy; 2024 Las Cascadas del Aljibe. Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
