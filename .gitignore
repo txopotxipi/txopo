@@ -1,0 +1,38 @@
+# OS generated files
+.DS_Store
+.postman_db.json
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node
+node_modules/
+dist/
+tmp/
+.env
+
+# XAMPP/Local
+/xampp/
+
+# Security - Sensitive Credentials
+config/db_config.php
+**/save_message.php
+**/submit.php
+**/*password*
+**/*credential*
+
+# Cloudflare Pages
+.wrangler/
+publicar/
+.chrome-headless/
+.softaculous/
+contenido_archivos.txt

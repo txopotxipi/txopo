@@ -1,0 +1,1 @@
+<?php $d="fotos/";foreach(glob($d."*.jpg")as$i)echo'<img src="'.htmlspecialchars($i).'" alt="Fervenza" data-aos="zoom-in">';
