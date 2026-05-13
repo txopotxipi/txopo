@@ -1,0 +1,65 @@
+/* Estilos CSS */
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background-color: #3b83c0;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+h1, h2 {
+  color: #1e407d;
+} 
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.video img {
+  cursor: pointer;
+}
+
+#intro {
+  padding: 30px;
+}
+
+#photos {
+  padding: 30px;
+  background-color: #f1f1f1;
+}
+
+#videos {
+  padding: 30px;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center; 
+}
+
+@media (max-width: 768px) {
+  img {
+    margin-bottom: 20px;
+  }
+}
+
+/* Espaciado entre columnas en md y lg */
+
+@media (min-width: 768px) {
+  .col-md-4 {
+    padding-bottom: 20px;
+  }
+}
+
+@media (min-width: 992px) {
+  .col-lg-4 {
+    padding-bottom: 20px;
+  } 
+}
