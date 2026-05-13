@@ -1,0 +1,34 @@
+# Txopo Txipi - Portfolio de Senderismo y Viajes
+
+Este es el portfolio personal de **Txopo Txipi**, una colección de rutas de senderismo, fotografías de naturaleza y viajes organizados por destinos.
+
+El proyecto es una web estática moderna, diseñada para ser rápida, accesible y visualmente atractiva, manteniendo una estructura sencilla para facilitar su mantenimiento.
+
+## 🚀 Ver el Proyecto
+Puedes visitar la versión desplegada en:
+https://txopotxipi.github.io/txopo/
+*(Nota: Asegúrate de que GitHub Pages esté activado en la configuración del repositorio)*
+
+## 🛠️ Estructura del Proyecto
+
+El repositorio está organizado de forma lógica para permitir la escalabilidad:
+
+- **`index.html`**: La página principal (Landing Page).
+- **`assets/`**: Recursos globales.
+  - `css/`: Hoja de estilos principal (`design-system.css`).
+  - `js/`: Lógica de la aplicación (`app.js`, `sites-data.js`).
+- **`[Nombre del Destino]/`** (ej. `Bilbao/`, `Praga/`): Carpetas individuales para cada viaje. Contienen su propio `index.html` y galería.
+- **`scripts/`**: Utilidades de automatización (ej. script de subida a GitHub).
+
+## ✨ Características
+
+- **Diseño Responsive**: Adaptado a móviles y escritorio (Base HTML5UP Prologue + Personalización Premium).
+- **Modo Oscuro**: Preferencia de tema guardada automáticamente.
+- **Carga Diferida (Lazy Loading)**: Imágenes optimizadas para mayor velocidad.
+- **Buscador en Tiempo Real**: Filtrado instantáneo de destinos.
+- **Formulario de Contacto**: Funcional con validación básica.
+
+## 📄 Licencia
+
+Este proyecto utiliza la plantilla "Prologue" de [HTML5 UP](html5up.net), licenciada bajo Creative Commons Attribution 3.0.
+El contenido fotográfico es propiedad de Txopo Txipi.
