@@ -566,42 +566,30 @@
                     <h2>Lanza tu mensaje en la botella</h2>
                 </header>
                 <p> No tengo soluciones a tus dudas, pero la respuesta, como decía Bob Dylan, está en el viento.</p>
-                <form action=contact.php method=post accept-charset=UTF-8 id="contact-form">
-                    <input type="hidden" name="csrf_token" id="csrf_token" value="">
-                    <div class=elem-group>
-                        <label for=name>Tu nombre</label>
-                        <input type=text id=name name=visitor_name placeholder="Ejemplo: Pedro"
-                            pattern=^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$
-                            required>
+                <form action="https://api.web3forms.com/submit" method="POST" id="contact-form">
+                    <input type="hidden" name="access_key" value="a339e24e-f124-406c-b14e-6e293688fe9f">
+                    <input type="hidden" name="subject" value="Nuevo mensaje desde la Web Txopo">
+                    <input type="hidden" name="from_name" value="Txopo Web">
+                    <input type="hidden" name="redirect" value="https://txopo.pages.dev/">
+                    
+                    <div class="elem-group">
+                        <label for="name">Tu nombre</label>
+                        <input type="text" id="name" name="visitor_name" placeholder="Ejemplo: Pedro" required>
                     </div>
-                    <div class=elem-group>
-                        <label for=email>Tu Correo</label>
-                        <input type=email id=email name=visitor_email placeholder="Ejemplo: Pedro@email.com">
+                    <div class="elem-group">
+                        <label for="email">Tu Correo</label>
+                        <input type="email" id="email" name="visitor_email" placeholder="Ejemplo: Pedro@email.com" required>
                     </div>
-                    <div class=elem-group>
-                        <label for=title>En que te pueden ayudar</label>
-                        <input type=text id=title1 name=email_title required
-                            placeholder="Ejemplo: Quiero la llave de la felicidad"
-                            pattern=^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$>
+                    <div class="elem-group">
+                        <label for="title">En qué te pueden ayudar</label>
+                        <input type="text" id="title1" name="email_title" required placeholder="Ejemplo: Saludos desde mi ciudad">
                     </div>
-                    <div class=elem-group>
-                        <label for=message>Deja tu comentario</label>
-                        <textarea id=message name=visitor_message
-                            placeholder="Ejemplo: Todas estas palabras se perderán en el ciberespacio, como lágrimas en la lluvia. Hora de descansar"
-                            pattern=^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$
-                            required></textarea>
+                    <div class="elem-group">
+                        <label for="message">Deja tu comentario</label>
+                        <textarea id="message" name="visitor_message" placeholder="Escribe aquí tu mensaje..." required></textarea>
                     </div>
-                    <button type=submit>Lanzar botella</button>
+                    <button type="submit">Lanzar botella</button>
                 </form>
-                <script>
-                    // Obtener token CSRF al cargar la página
-                    fetch('get_token.php')
-                        .then(r => r.json())
-                        .then(data => {
-                            document.getElementById('csrf_token').value = data.csrf_token;
-                        })
-                        .catch(err => console.log('CSRF token load:', err));
-                </script>
             </div>
         </section>
     </div>
