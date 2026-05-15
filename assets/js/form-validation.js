@@ -8,16 +8,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const contactForm = document.querySelector('form[action="contact.php"]');
 
     if (contactForm) {
-        // Prevenir ataques XSS en la entrada de datos
-        const sanitizeInput = function (input) {
-            return input
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#x27;')
-                .replace(/\//g, '&#x2F;');
-        };
+        fetch('get_token.php')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                const tokenInput = document.getElementById('csrf_token');
+                if (tokenInput && data.csrf_token) {
+                    tokenInput.value = data.csrf_token;
+                }
+            })
+            .catch(function () {
+                console.log('No se pudo cargar el token de seguridad del formulario.');
+            });
 
         // Validar el formulario antes de enviarlo
         contactForm.addEventListener('submit', function (event) {
