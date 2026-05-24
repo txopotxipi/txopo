@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /config/
+Disallow: /*.php
+Disallow: /xampp/
+Disallow: /node_modules/
+Disallow: /slider/
+
+Sitemap: https://txopo.lovestoblog.com/sitemap.xml
+
+Crawl-delay: 10

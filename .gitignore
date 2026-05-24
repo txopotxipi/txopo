@@ -25,6 +25,9 @@ tmp/
 
 # Security - Sensitive Credentials
 config/db_config.php
+db.php
+csrf_utils.php
+get_token.php
 **/save_message.php
 **/submit.php
 **/*password*
@@ -36,3 +39,4 @@ publicar/
 .chrome-headless/
 .softaculous/
 contenido_archivos.txt
+plandemejora.txt
