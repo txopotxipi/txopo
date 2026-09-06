@@ -1,355 +1,355 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    background: #f4f4f4;
-}
-
-.navbar {
-    transition: background-color 0.3s ease, padding 0.3s ease;
-    padding: 1rem 0;
-}
-
-.navbar.scrolled {
-    background-color: rgba(52, 58, 64, 0.9) !important;
-    padding: 0.5rem 0;
-}
-
-.navbar-brand {
-    font-weight: 700;
-    font-size: 1.5rem;
-}
-
-.parallax-header {
-    background: url('fotos/6.jpg') no-repeat center center fixed;
-    background-size: cover;
-    position: relative;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-  }
-  
-  .parallax-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Add a dark overlay */
-    z-index: 1;
-  }
-  
-  .parallax-header .container {
-    position: relative;
-    z-index: 2;
-  }  
-
-.parallax-header h1 {
-    font-size: 4rem;
-    font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-}
-
-.parallax-header p {
-    font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-}
-
-.section-title {
-    text-align: center;
-    margin: 60px 0 40px;
-    font-size: 2.5rem;
-    color: #444;
-    position: relative;
-}
-
-.section-title::after {
-    content: '';
-    height: 4px;
-    width: 50px;
-    background: #3498db;
-    display: block;
-    margin: 20px auto;
-}
-
-.gallery-container, .video-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    justify-content: center;
-}
-
-.gallery-item {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .gallery-item img {
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-  
-  .gallery-item:hover img {
-    transform: scale(1.1);
-    filter: brightness(70%);
-  }
-  
-  .gallery-item .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .gallery-item:hover .overlay {
-    opacity: 1;
-  }
-
-  .video-item {
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 30px;
-  }
-  
-  .video-item iframe {
-    width: 100%;
-    height: 100%;
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-  
-  .video-item:hover iframe {
-    transform: scale(1.05);
-    filter: brightness(80%);
-  } 
-
-#contacto {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-}
-
-#contactForm {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-#contactForm .form-control {
-    border: none;
-    border-bottom: 2px solid #ced4da;
-    border-radius: 0;
-    box-shadow: none;
-    transition: all 0.3s;
-}
-
-#contactForm .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
-}
-
-#contactForm label {
-    transition: all 0.3s;
-}
-
-#contactForm .form-group:focus-within label {
-    color: #007bff;
-}
-
-#contactForm button[type="submit"] {
-    background-color: #007bff;
-    border: none;
-    transition: all 0.3s;
-}
-
-#contactForm button[type="submit"]:hover {
-    background-color: #0056b3;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.notification {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 15px 20px;
-    border-radius: 4px;
-    color: #fff;
-    font-weight: bold;
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.3s, transform 0.3s;
-    z-index: 1000;
-}
-
-.notification.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.notification.success {
-    background-color: #28a745;
-}
-
-.notification.error {
-    background-color: #dc3545;
-}
-
-footer {
-    background-color: #343a40;
-    color: #fff;
-    padding: 2rem 0;
-}
-
-footer .social-icons a {
-    font-size: 1.5rem;
-    margin: 0 10px;
-    color: #fff;
-    transition: color 0.3s ease;
-}
-
-footer .social-icons a:hover {
-    color: #007bff;
-}
-
-@media (max-width: 768px) {
-    .parallax-header h1 {
-        font-size: 3rem;
-    }
-
-    .parallax-header p {
-        font-size: 1.2rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .gallery-container, .video-container {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
-
-    /* Estilos actualizados para el navbar en pantallas pequeñas */
-    .navbar-brand {
-        font-size: 1.2rem;
-    }
-
-    .navbar-toggler {
-        padding: 0.25rem 0.5rem;
-        font-size: 1rem;
-    }
-
-    .navbar > .container {
-        flex-wrap: nowrap;
-    }
-
-    .navbar-collapse {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background-color: rgba(52, 58, 64, 0.95);
-        padding: 1rem;
-    }
-
-    .navbar-nav {
-        flex-direction: column;
-    }
-
-    .nav-item {
-        margin: 0.5rem 0;
-    }
-}
-
-/* Media query adicional para pantallas muy pequeñas */
-@media (max-width: 350px) {
-    .navbar-brand {
-        font-size: 1rem;
-    }
-
-    .navbar-toggler {
-        padding: 0.2rem 0.4rem;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 576px) and (orientation: portrait) {
-    .navbar > .container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-
-    .navbar-brand {
-        margin-left: 0;
-    }
-
-    .navbar-toggler {
-        margin-right: 0;
-    }
-}
-
-/* Ajuste adicional para el header en modo paisaje */
-@media (max-width: 896px) and (orientation: landscape) {
-    .parallax-header {
-        padding-top: 5rem; /* Cambiado de 80px a 5rem */
-    }
-
-    .parallax-header h1 {
-        font-size: 2.5rem; /* Ya estaba en rem, lo dejamos así */
-    }
-
-    .parallax-header p {
-        font-size: 1rem; /* Ya estaba en rem, lo dejamos así */
-    }
-
-    .parallax-header .container {
-        margin-top: 2rem; /* Ya estaba en rem, lo dejamos así */
-    }
-}
-
-.btn {
-    transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-  
-  .btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-5px);
-  }
-  
-  .nav-link {
-    position: relative;
-    display: inline-block;
-    transition: color 0.3s ease;
-  }
-  
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    display: block;
-    margin-top: 5px;
-    right: 0;
-    background: #fff;
-    transition: width 0.4s ease;
-    -webkit-transition: width 0.4s ease;
-  }
-  
-  .nav-link:hover::after {
-    width: 100%;
-    left: 0;
-    background: #fff;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+}
+
+.navbar {
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    padding: 1rem 0;
+}
+
+.navbar.scrolled {
+    background-color: rgba(52, 58, 64, 0.9) !important;
+    padding: 0.5rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.parallax-header {
+    background: url('fotos/6.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  .parallax-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Add a dark overlay */
+    z-index: 1;
+  }
+  
+  .parallax-header .container {
+    position: relative;
+    z-index: 2;
+  }  
+
+.parallax-header h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.parallax-header p {
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.section-title {
+    text-align: center;
+    margin: 60px 0 40px;
+    font-size: 2.5rem;
+    color: #444;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    height: 4px;
+    width: 50px;
+    background: #3498db;
+    display: block;
+    margin: 20px auto;
+}
+
+.gallery-container, .video-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .gallery-item img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  
+  .gallery-item:hover img {
+    transform: scale(1.1);
+    filter: brightness(70%);
+  }
+  
+  .gallery-item .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .gallery-item:hover .overlay {
+    opacity: 1;
+  }
+
+  .video-item {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  
+  .video-item iframe {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  
+  .video-item:hover iframe {
+    transform: scale(1.05);
+    filter: brightness(80%);
+  } 
+
+#contacto {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+#contactForm {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#contactForm .form-control {
+    border: none;
+    border-bottom: 2px solid #ced4da;
+    border-radius: 0;
+    box-shadow: none;
+    transition: all 0.3s;
+}
+
+#contactForm .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}
+
+#contactForm label {
+    transition: all 0.3s;
+}
+
+#contactForm .form-group:focus-within label {
+    color: #007bff;
+}
+
+#contactForm button[type="submit"] {
+    background-color: #007bff;
+    border: none;
+    transition: all 0.3s;
+}
+
+#contactForm button[type="submit"]:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1000;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+footer {
+    background-color: #343a40;
+    color: #fff;
+    padding: 2rem 0;
+}
+
+footer .social-icons a {
+    font-size: 1.5rem;
+    margin: 0 10px;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+footer .social-icons a:hover {
+    color: #007bff;
+}
+
+@media (max-width: 768px) {
+    .parallax-header h1 {
+        font-size: 3rem;
+    }
+
+    .parallax-header p {
+        font-size: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .gallery-container, .video-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    /* Estilos actualizados para el navbar en pantallas pequeñas */
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem;
+        font-size: 1rem;
+    }
+
+    .navbar > .container {
+        flex-wrap: nowrap;
+    }
+
+    .navbar-collapse {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: rgba(52, 58, 64, 0.95);
+        padding: 1rem;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+    }
+
+    .nav-item {
+        margin: 0.5rem 0;
+    }
+}
+
+/* Media query adicional para pantallas muy pequeñas */
+@media (max-width: 350px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+
+    .navbar-toggler {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) and (orientation: portrait) {
+    .navbar > .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .navbar-brand {
+        margin-left: 0;
+    }
+
+    .navbar-toggler {
+        margin-right: 0;
+    }
+}
+
+/* Ajuste adicional para el header en modo paisaje */
+@media (max-width: 896px) and (orientation: landscape) {
+    .parallax-header {
+        padding-top: 5rem; /* Cambiado de 80px a 5rem */
+    }
+
+    .parallax-header h1 {
+        font-size: 2.5rem; /* Ya estaba en rem, lo dejamos así */
+    }
+
+    .parallax-header p {
+        font-size: 1rem; /* Ya estaba en rem, lo dejamos así */
+    }
+
+    .parallax-header .container {
+        margin-top: 2rem; /* Ya estaba en rem, lo dejamos así */
+    }
+}
+
+.btn {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-5px);
+  }
+  
+  .nav-link {
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    display: block;
+    margin-top: 5px;
+    right: 0;
+    background: #fff;
+    transition: width 0.4s ease;
+    -webkit-transition: width 0.4s ease;
+  }
+  
+  .nav-link:hover::after {
+    width: 100%;
+    left: 0;
+    background: #fff;
+  }
   

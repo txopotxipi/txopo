@@ -490,10 +490,10 @@ section {
 }
 
 @keyframes heroBgSlideshow {
-    0%, 20% { background-image: url('../images/hero_urdaibai.png'); }
-    25%, 45% { background-image: url('../images/hero_bg2.jpg'); } 
-    50%, 70% { background-image: url('../images/hero_bg3.jpg'); }
-    75%, 100% { background-image: url('../images/hero_urdaibai.png'); }
+    0%, 20% { background-image: url('../../images/hero_urdaibai.png'); }
+    25%, 45% { background-image: url('../../images/pic02.jpg'); } 
+    50%, 70% { background-image: url('../../images/banner.jpg'); }
+    75%, 100% { background-image: url('../../images/hero_urdaibai.png'); }
 }
 
 .hero-media {

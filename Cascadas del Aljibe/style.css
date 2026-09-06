@@ -1,0 +1,8 @@
+/* Custom styles */
+#sliderImages img {
+    transition: transform 0.5s ease-in-out;
+}
+
+#sliderImages img.active {
+    transform: scale(1.05);
+}

@@ -118,6 +118,15 @@ window.txopoSiteData = {
         { "href": "https://txopo13.lovestoblog.com/Alpujarra/index.html", "title": "Alpujarra" },
         { "href": "https://txopo13.lovestoblog.com/Venecia/index.html", "title": "Venecia" },
         { "href": "https://txopo13.lovestoblog.com/R\u00e1vena/index.php", "title": "R\u00e1vena" },
-        { "href": "https://txopo13.lovestoblog.com/LAPONIA/index.php", "title": "Laponia" }
+        { "href": "https://txopo13.lovestoblog.com/LAPONIA/index.php", "title": "Laponia" },
+        { "href": "https://kotor1.pages.dev/", "title": "Kotor" },
+        { "href": "https://dubrovnik.pages.dev/", "title": "Dubrovnik" },
+        { "href": "https://split1.pages.dev/", "title": "Split" },
+        { "href": "https://zadar.pages.dev/", "title": "Zadar" },
+        { "href": "https://budva.pages.dev/", "title": "Budva" },
+        { "href": "https://mostar1.pages.dev/", "title": "Mostar" },
+        { "href": "https://trogir.pages.dev/", "title": "Trogir" },
+        { "href": "https://zagreb.pages.dev/", "title": "Zagreb" },
+        { "href": "https://plitvice.pages.dev/", "title": "Plitvice" }
     ]
 };

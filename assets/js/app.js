@@ -70,22 +70,22 @@
     }
 
     function getJourneyType(entry) {
-        if (entry.external) {
-            return "exterior";
-        }
-
         const haystack = normalizeForSearch(entry.title + " " + entry.href);
 
         if (/(navidad|semana santa|orgullo|jaiak|hispanidad|athletic|champions|real madrid|verbena|portu jaiak|mexillonada|sabucedo|sanisidro|san patricio|dakidarria|ramoncin|marta|coro|mili|festa)/.test(haystack)) {
             return "fiestas";
         }
 
-        if (/(praga|karlovy|florencia|ferrara|venecia|ravena|laponia|cesky|olivenza|evora|toledo|talavera|burgos|buitrago|yecla|alentejo|frias|ona|orbaneja|covarrubias|silos|palacio|laredo|poza|juan sebastian|puerto viejo)/.test(haystack)) {
+        if (/(praga|karlovy|florencia|ferrara|venecia|ravena|laponia|cesky|olivenza|evora|toledo|talavera|burgos|buitrago|yecla|alentejo|frias|ona|orbaneja|covarrubias|silos|palacio|laredo|poza|juan sebastian|puerto viejo|kotor|dubrovnik|split|zadar|budva|mostar|trogir|zagreb)/.test(haystack)) {
             return "ciudades";
         }
 
-        if (/(amboto|gorbea|pagasarri|panticosa|oroel|ibon|estan|cascadas|fervenzas|faro|desfiladero|sonabia|ason|gorliz|serantes|puron|cazadores|cahorros|monachil|alpujarra|aguino|torla|gollizno|ebro|tobalina|tobera|puentedey|aljibe|caballo|mea|santiaguino)/.test(haystack)) {
+        if (/(amboto|gorbea|pagasarri|panticosa|oroel|ibon|estan|cascadas|fervenzas|faro|desfiladero|sonabia|ason|gorliz|serantes|puron|cazadores|cahorros|monachil|alpujarra|aguino|torla|gollizno|ebro|tobalina|tobera|puentedey|aljibe|caballo|mea|santiaguino|plitvice)/.test(haystack)) {
             return "rutas";
+        }
+
+        if (entry.external) {
+            return "exterior";
         }
 
         return "especiales";
@@ -102,7 +102,7 @@
             href,
             external,
             type,
-            searchIndex: normalizeForSearch([title, href, typeLabels[type]].join(" ")),
+            searchIndex: normalizeForSearch([title, href, typeLabels[type], external ? "exterior externo" : ""].join(" ")),
             safeHref: external ? href : encodeURI(href)
         };
     }
@@ -196,7 +196,7 @@
 
         const query = normalizeForSearch(state.query);
         const filtered = journeys.filter(function (item) {
-            const matchesFilter = state.filter === "all" || item.type === state.filter;
+            const matchesFilter = state.filter === "all" || item.type === state.filter || (state.filter === "exterior" && item.external);
             const matchesQuery = !query || item.searchIndex.indexOf(query) !== -1;
             return matchesFilter && matchesQuery;
         });

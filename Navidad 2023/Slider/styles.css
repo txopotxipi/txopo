@@ -1,18 +1,18 @@
-.swiper {
-  height: 80vh;
-  width: 100%;
-}
-
-.swiper-slide {   
-  display: flex;
-  justify-content: center;
-  align-items: center;   
-}
-
-.swiper-slide img {
-  max-height: 100%;
-  max-width: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+.swiper {
+  height: 80vh;
+  width: 100%;
+}
+
+.swiper-slide {   
+  display: flex;
+  justify-content: center;
+  align-items: center;   
+}
+
+.swiper-slide img {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
