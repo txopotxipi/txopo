@@ -2,9 +2,12 @@
     const rawData = window.txopoSiteData || { featuredDestinations: [], journeys: [] };
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = window.matchMedia("(pointer: fine)").matches;
+    const EXPAND_STEP = 30;
+
     const state = {
         query: "",
-        filter: "all"
+        filter: "all",
+        visible: EXPAND_STEP
     };
 
     const typeLabels = {
@@ -175,17 +178,20 @@
             return;
         }
 
+        const hidden = filtered.length - state.visible;
+        const hasMore = hidden > 0;
+
         if (!filtered.length) {
             resultsSummary.textContent = "No hay coincidencias con el filtro actual. Prueba otro nombre o abre de nuevo el mapa completo.";
             return;
         }
 
-        if (filtered.length === journeys.length) {
+        if (filtered.length === journeys.length && !hasMore) {
             resultsSummary.textContent = journeys.length + " destinos listos para abrir.";
             return;
         }
 
-        resultsSummary.textContent = filtered.length + " resultados de " + journeys.length + ".";
+        resultsSummary.textContent = filtered.length + " resultados de " + journeys.length + (hasMore ? " · mostrando " + state.visible + " (" + hidden + " más)" : "");
     }
 
     function renderJourneys() {
@@ -205,10 +211,39 @@
 
         if (!filtered.length) {
             journeyGrid.innerHTML = '<div class="empty-state">No aparece ningun viaje con ese criterio. Borra parte de la busqueda o cambia el filtro para volver a ver el archivo completo.</div>';
+            updateLoadMore(0);
             return;
         }
 
-        journeyGrid.innerHTML = filtered.map(createJourneyCard).join("");
+        journeyGrid.innerHTML = filtered.slice(0, state.visible).map(createJourneyCard).join("");
+        updateLoadMore(filtered.length);
+    }
+
+    function updateLoadMore(total) {
+        const button = document.getElementById("loadMoreBtn");
+        if (!button) {
+            return;
+        }
+
+        const remaining = total - state.visible;
+        if (remaining > 0) {
+            button.hidden = false;
+            button.textContent = "Ver más destinos (" + remaining + " restantes)";
+        } else {
+            button.hidden = true;
+        }
+    }
+
+    function setupLoadMore() {
+        const button = document.getElementById("loadMoreBtn");
+        if (!button) {
+            return;
+        }
+
+        button.addEventListener("click", function () {
+            state.visible += EXPAND_STEP;
+            renderJourneys();
+        });
     }
 
     function updateHeroStats() {
@@ -238,6 +273,7 @@
                 filterButtons.forEach(function (item) {
                     item.classList.toggle("active", item === button);
                 });
+                state.visible = EXPAND_STEP;
                 renderJourneys();
             });
         });
@@ -246,6 +282,7 @@
         if (searchInput) {
             searchInput.addEventListener("input", function () {
                 state.query = searchInput.value;
+                state.visible = EXPAND_STEP;
                 renderJourneys();
             });
         }
@@ -360,26 +397,6 @@
         }, 1400);
     }
 
-    function buildSpringParticles() {
-        const springParticles = document.getElementById("springParticles");
-        if (!springParticles || reduceMotion) {
-            return;
-        }
-
-        const total = 30;
-        for (let index = 0; index < total; index += 1) {
-            const particle = document.createElement("span");
-            particle.className = "spring-particle";
-            particle.style.setProperty("--left", Math.round(Math.random() * 100) + "vw");
-            particle.style.setProperty("--size", Math.round(10 + Math.random() * 14) + "px");
-            particle.style.setProperty("--duration", (10 + Math.random() * 8).toFixed(2) + "s");
-            particle.style.setProperty("--delay", (Math.random() * -16).toFixed(2) + "s");
-            particle.style.setProperty("--drift", Math.round((Math.random() - 0.5) * 90) + "px");
-            particle.style.background = `linear-gradient(135deg, rgba(255,255,255,${0.4 + Math.random()*0.3}), rgba(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, 0.8))`;
-            springParticles.appendChild(particle);
-        }
-    }
-
     function setupSpotlightTilt() {
         const spotlight = document.getElementById("heroSpotlight");
         if (!spotlight || reduceMotion || !finePointer) {
@@ -465,15 +482,24 @@
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             if (!validate()) return;
+
+            const tokenField = form.querySelector('#csrf_token');
+            if (tokenField) {
+                tokenField.name = 'csrf_token';
+            }
+
+            const formData = new FormData(form);
+            formData.set('ajax', '1');
+
             setFeedback("Enviando mensaje...", "is-success");
-            fetch(form.action, { method: 'POST', body: new FormData(form) })
+            fetch(form.action, { method: 'POST', body: formData })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
                         feedback.innerHTML = `<div class="success-message">¡Mensaje enviado con éxito! Gracias por escribir.</div>`;
                         form.reset();
                     } else {
-                        setFeedback("Hubo un problema al enviar: " + data.message, "is-error");
+                        setFeedback("Hubo un problema al enviar: " + (data.message || "inténtalo de nuevo"), "is-error");
                     }
                 })
                 .catch(() => {
@@ -510,7 +536,7 @@
         el.classList.add('is-typing');
         
         let i = 0;
-        // 63 caracteres en ~3.5s -> ~55ms por caracter
+        // Escritura rápida: todo el titular visible en ~1.2s
         setTimeout(() => {
             const interval = setInterval(() => {
                 if (i < text.length) {
@@ -520,8 +546,8 @@
                     clearInterval(interval);
                     el.classList.remove('is-typing'); // quita el cursor al acabar si se quiere
                 }
-            }, 55);
-        }, 1000);
+            }, 18);
+        }, 150);
     }
 
     function init() {
@@ -529,9 +555,9 @@
         updateHeroStats();
         renderJourneys();
         setupFilters();
+        setupLoadMore();
         setupHeader();
         setupRevealAnimations();
-        buildSpringParticles();
         setupSpotlightTilt();
 
         setupContactValidation();
@@ -546,11 +572,11 @@
         init();
     }
 
-    // Preloader
+    // Preloader: se oculta en cuanto la página carga (mínimo 400ms para evitar parpadeo)
     window.addEventListener('load', () => {
         setTimeout(() => {
             const preloader = document.getElementById('preloader');
             if (preloader) preloader.classList.add('hidden');
-        }, 1500);
+        }, 400);
     });
 })();

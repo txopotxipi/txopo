@@ -144,35 +144,51 @@ function render_response_page($title, $message, $variant = 'success', $refreshSe
 </html>';
 }
 
+function send_response($title, $messageHtml, $variant = 'success', $statusCode = 200, $refreshSeconds = 5) {
+    $isAjax = isset($_POST['ajax']);
+    if ($isAjax) {
+        http_response_code($statusCode);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode([
+            'success' => $variant === 'success',
+            'message' => $title
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    http_response_code($statusCode);
+    render_response_page($title, $messageHtml, $variant, $refreshSeconds);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    render_response_page(
+    send_response(
         'Formulario no enviado',
         '<h1>Formulario no enviado.</h1>',
         'error',
+        405,
         3
     );
-    exit;
 }
 
 $token = isset($_POST['csrf_token']) ? $_POST['csrf_token'] : '';
 if (!verify_csrf_token($token)) {
-    http_response_code(403);
-    render_response_page(
-        'Error de seguridad',
+    send_response(
+        'Error de seguridad: Token de verificación inválido.',
         '<h1>Error de seguridad: Token de verificación inválido.</h1>',
         'error',
+        403,
         3
     );
-    exit;
 }
 
 include_once('db.php');
 
 function sanitize_input($data) {
+    // Solo normaliza la entrada: trim + límite de longitud.
+    // El escape HTML se hace en la SALIDA (render_response_page / send_response), no aquí.
     $data = trim($data);
-    $data = stripslashes($data);
-    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+    return mb_substr($data, 0, 500);
 }
 
 $visitor_name = isset($_POST['visitor_name']) ? sanitize_input($_POST['visitor_name']) : '';
@@ -200,13 +216,12 @@ if (!empty($errors)) {
         $items .= '<li>' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</li>';
     }
 
-    render_response_page(
-        'Revisa el formulario',
+    send_response(
+        'Revisa el formulario: ' . implode('. ', $errors) . '.',
         '<h1>Por favor, corrige los siguientes errores:</h1><ul style="margin:1.5rem auto 0; max-width:28rem; text-align:left; color:#65747b; line-height:1.7;">' . $items . '</ul>',
-        'error'
+        'error',
+        400
     );
-    mysqli_close($conectar);
-    exit;
 }
 
 $visita = $visitor_name;
@@ -215,30 +230,31 @@ $fecha = date('Y-m-d H:i:s');
 
 $stmt = mysqli_prepare($conectar, "INSERT INTO `mensajes` (`id`, `visitor_name`, `visitor_email`, `visitor_message`, `email_title`, `fecha`) VALUES (NULL, ?, ?, ?, ?, ?)");
 if (!$stmt) {
-    render_response_page(
+    send_response(
         'Error al preparar el mensaje',
         '<h1>Ha ocurrido un error al preparar tu mensaje. Por favor, inténtalo de nuevo más tarde.</h1>',
-        'error'
+        'error',
+        500
     );
-    mysqli_close($conectar);
-    exit;
 }
 
 mysqli_stmt_bind_param($stmt, "sssss", $visitor_name, $visitor_email, $visitor_message, $email_title, $fecha);
 
 if (mysqli_stmt_execute($stmt)) {
-    render_response_page(
+    mysqli_stmt_close($stmt);
+    mysqli_close($conectar);
+    send_response(
         'Mensaje enviado',
-        "<h1>Gracias por tus pensamientos, $visita. Serán enviados a las estrellas, ellas sabrán darte una respuesta.</h1>"
+        "<h1>Gracias por tus pensamientos, " . htmlspecialchars($visita, ENT_QUOTES, 'UTF-8') . ". Serán enviados a las estrellas, ellas sabrán darte una respuesta.</h1>"
     );
 } else {
-    render_response_page(
+    mysqli_stmt_close($stmt);
+    mysqli_close($conectar);
+    send_response(
         'Error al enviar el mensaje',
         '<h1>Ha ocurrido un error al procesar tu solicitud. Por favor, inténtalo de nuevo más tarde.</h1>',
-        'error'
+        'error',
+        500
     );
 }
-
-mysqli_stmt_close($stmt);
-mysqli_close($conectar);
 ?>
