@@ -1,4 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+/* Las tipografias se cargan desde el <head> de index.html, NO con un @import
+   aqui. Un @import dentro de una hoja de estilos obliga al navegador a
+   descargar y analizar primero este archivo y solo despues pedir la hoja de
+   Google Fonts: son dos peticiones en serie que bloquean el dibujado de la
+   pagina. Con <link rel="preconnect"> + <link rel="stylesheet"> las dos
+   peticiones salen en paralelo. */
 
 :root {
     color-scheme: light;
@@ -11,9 +16,26 @@
     --line-strong: rgba(25, 66, 61, 0.22);
     --text: #153633;
     --text-muted: #4f6f6b;
-    --text-soft: #6a8783;
+    --text: #153633;
+    --text-muted: #4f6f6b;
+    /* --text-soft se usa en textos pequenos (0.88rem: resumen de resultados,
+       etiqueta de tipo en las tarjetas). El valor anterior (#6a8783) daba solo
+       3.4:1 sobre el fondo y no llegaba al minimo WCAG AA de 4.5:1 para texto
+       pequeno (medido con contraste.py). El nuevo mantiene el tono pero pasa:
+       4.75:1 sobre --bg y 5.20:1 sobre las tarjetas. */
+    --text-soft: #52706a;
     --accent: #1e8b71;
     --accent-deep: #0f5d4d;
+    /* Version del acento OSCURA, solo para TEXTO pequeno sobre fondos claros.
+       --accent (#1e8b71) esta pensado para fondos, botones e iconos (minimo
+       WCAG 3:1, que cumple), pero como COLOR DE TEXTO no llega: 3.7:1 sobre el
+       fondo y 4.2:1 sobre blanco. Los textos que lo usaban (flecha "Abrir" de
+       las tarjetas y las etiquetas flotantes del formulario, ambas < 1rem)
+       fallaban AA. Este tono pasa en los tres fondos (5.3 / 5.8 / 6.0).
+       Verificado con contraste.py; no cambiar sin recalcular. */
+    --accent-text: #127058;
+    --accent-soft: #d8efe6;
+    --accent-warm: #ff8a63;
     --accent-soft: #d8efe6;
     --accent-warm: #ff8a63;
     --shadow-soft: 0 20px 50px rgba(17, 43, 39, 0.08);
@@ -23,6 +45,13 @@
     --radius-md: 18px;
     --radius-sm: 14px;
     --content-width: min(1180px, calc(100vw - 2rem));
+    /* Alto real del encabezado fijo. Se usa para que al saltar a una seccion
+       con un enlace #ancla el titulo no quede escondido detras de el, y para
+       colocar el menu desplegable en movil.
+       Es una variable y no un numero suelto porque el encabezado ENCOGE en
+       pantallas pequenas (menos relleno, y en <=680px se oculta el texto de la
+       marca): mas abajo se reajusta en cada breakpoint. Si se dejara fijo en
+       88px, en movil sobraria espacio al saltar a una seccion. */
     --header-height: 88px;
     --font-sans: "Manrope", sans-serif;
     --font-display: "Cormorant Garamond", serif;
@@ -135,16 +164,39 @@ button {
     animation-delay: -7s;
 }
 
-.site-header,
+/* ---------------------------------------------------------------------------
+   Orden de apilamiento (por que el encabezado se veia borroso)
+   ---------------------------------------------------------------------------
+   ANTES .site-header, main y .site-footer compartian z-index: 1. Al empatar,
+   CSS pinta encima al que va despues en el HTML, y main va despues del header:
+   por eso el contenido se dibujaba SOBRE el encabezado al desplazarse. Como el
+   header es semitransparente y lleva backdrop-filter: blur(18px), el resultado
+   no era un solapamiento limpio sino una mezcla borrosa de ambos.
+
+   La solucion no es quitar el blur ni soltar el encabezado, sino dar a cada
+   capa su nivel, sin empates:
+       0 -> fondos ambientales (.ambient-orbs)
+       1 -> contenido (main, .site-footer)
+      100 -> encabezado: siempre por encima del contenido
+
+   isolation: isolate en main es la otra mitad del arreglo: encierra ahi dentro
+   cualquier contexto de apilamiento que creen las tarjetas al animarse
+   (transform en :hover crea uno nuevo), de modo que por muy alto que suban no
+   pueden escapar por encima del encabezado. */
 main,
 .site-footer {
     position: relative;
     z-index: 1;
 }
 
+main {
+    isolation: isolate;
+}
+
 .site-header {
     position: sticky;
     top: 0;
+    z-index: 100;
     width: min(1200px, calc(100vw - 1rem));
     margin: 0 auto;
     margin-top: 0.75rem;
@@ -157,6 +209,7 @@ main,
     border: 1px solid rgba(21, 54, 51, 0.08);
     border-radius: 999px;
     backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     box-shadow: 0 18px 45px rgba(23, 53, 49, 0.08);
     transition:
         transform var(--transition),
@@ -164,9 +217,29 @@ main,
         background var(--transition);
 }
 
+/* Al desplazarse se sube la opacidad del fondo de 0.72 a 0.97. Con 0.72 el
+   texto que pasaba por detras se transparentaba y se leia a traves del
+   encabezado, que es lo que se percibia como "borroso". Con 0.97 el fondo es
+   practicamente opaco y el contenido ya no se cuela, pero se conserva el toque
+   de cristal del diseno.
+   El -webkit- es necesario para Safari, que aun no acepta la forma sin prefijo:
+   sin el, en iPhone y Mac no habia efecto cristal en absoluto. */
 .site-header.is-scrolled {
-    background: rgba(252, 250, 245, 0.88);
+    background: rgba(252, 250, 245, 0.97);
     box-shadow: 0 22px 55px rgba(23, 53, 49, 0.12);
+}
+
+/* Red de seguridad para navegadores SIN backdrop-filter (Firefox con la opcion
+   desactivada, o navegadores antiguos). Ahi un fondo semitransparente deja ver
+   el texto de detras con total nitidez, asi que se pone opaco del todo. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header {
+        background: rgba(252, 250, 245, 0.98);
+    }
+
+    .site-header.is-scrolled {
+        background: #fcfaf5;
+    }
 }
 
 .brand {
@@ -382,7 +455,11 @@ section {
 }
 
 .primary-button {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-warm) 120%);
+    /* Antes: gradiente de --accent a --accent-warm (cobre). El extremo cobre
+       dejaba el texto blanco a 2.7:1 (y en la zona media 3.5:1), por debajo del
+       4.5:1 que exige AA para el texto del boton. El gradiente oscuro pasa:
+       blanco sobre el extremo claro da 5.3:1. Verificado con contraste.py. */
+    background: linear-gradient(135deg, #17795f 0%, var(--accent-deep) 130%);
     color: #fff;
     box-shadow: 0 18px 35px rgba(30, 139, 113, 0.24);
 }
@@ -472,11 +549,35 @@ section {
     background-position: center;
 }
 
+/* El hero rota tres fondos. Cada paso se declara dos veces: primero la imagen
+   de siempre (PNG/JPG) y despues la version WebP elegida con image-set().
+   Los navegadores que entienden image-set() se quedan con la segunda linea y
+   se ahorran un 65% de peso; los que no, descartan esa linea entera, que es
+   invalida para ellos, y usan la primera. Se generan con optimizar_webp.py. */
 @keyframes heroBgSlideshow {
-    0%, 20% { background-image: url('../../images/hero_urdaibai.png'); }
-    25%, 45% { background-image: url('../../images/pic02.jpg'); } 
-    50%, 70% { background-image: url('../../images/banner.jpg'); }
-    75%, 100% { background-image: url('../../images/hero_urdaibai.png'); }
+    0%, 20% {
+        background-image: url('../../images/hero_urdaibai.png');
+        background-image: image-set(url('../../images/hero_urdaibai.webp') type('image/webp'),
+                                    url('../../images/hero_urdaibai.png') type('image/png'));
+    }
+
+    25%, 45% {
+        background-image: url('../../images/pic02.jpg');
+        background-image: image-set(url('../../images/pic02.webp') type('image/webp'),
+                                    url('../../images/pic02.jpg') type('image/jpeg'));
+    }
+
+    50%, 70% {
+        background-image: url('../../images/banner.jpg');
+        background-image: image-set(url('../../images/banner.webp') type('image/webp'),
+                                    url('../../images/banner.jpg') type('image/jpeg'));
+    }
+
+    75%, 100% {
+        background-image: url('../../images/hero_urdaibai.png');
+        background-image: image-set(url('../../images/hero_urdaibai.webp') type('image/webp'),
+                                    url('../../images/hero_urdaibai.png') type('image/png'));
+    }
 }
 
 .hero-media {
@@ -607,6 +708,26 @@ section {
     box-shadow: 0 25px 50px rgba(0,0,0,0.2);
 }
 
+/* Entrada escalonada de las tarjetas destacadas: se animan cuando su seccion
+   se revela, no al cargar la pagina. El retardo de cada una lo calcula app.js
+   y lo deja en --card-delay. */
+.featured-section.is-visible .featured-card {
+    animation: card-rise 620ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: var(--card-delay, 0ms);
+}
+
+@keyframes card-rise {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .featured-card::after {
     content: "";
     position: absolute;
@@ -617,6 +738,16 @@ section {
 .featured-media {
     position: absolute;
     inset: 0;
+}
+
+/* El <picture> que envuelve la imagen de la tarjeta es display:inline por
+   defecto, y un inline no tiene altura: el height:100% del img de abajo
+   dejaria de funcionar y la foto se desbordaria o colapsaria. Con esto el
+   picture ocupa la tarjeta completa y el img vuelve a medir 100% dentro. */
+.featured-media picture {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .featured-media img {
@@ -845,7 +976,9 @@ section {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    color: var(--accent);
+    /* --accent-text y no --accent: es texto de 0.88rem sobre fondo claro y
+       el acento normal no llega a 4.5:1 (daba 3.7:1). Ver contraste.py. */
+    color: var(--accent-text);
     font-size: 0.88rem;
     font-weight: 800;
 }
@@ -995,6 +1128,79 @@ section {
     font-size: 0.92rem;
 }
 
+/* ---------------------------------------------------------------------------
+   Enlace para saltar al contenido
+   ---------------------------------------------------------------------------
+   Quien navega con teclado o lector de pantalla tenia que recorrer toda la
+   cabecera en cada carga antes de llegar al contenido. Este enlace es el primer
+   elemento de la pagina: esta oculto hasta que recibe el foco, y entonces
+   aparece arriba para saltar directamente al contenido principal. */
+.skip-link {
+    position: absolute;
+    left: 50%;
+    top: -100px;
+    transform: translateX(-50%);
+    z-index: 1200;
+    padding: 0.85rem 1.4rem;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0 0 0.9rem 0.9rem;
+    box-shadow: 0 10px 30px rgba(23, 53, 49, 0.28);
+    transition: top var(--transition);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Trampa antispam (honeypot)
+   ---------------------------------------------------------------------------
+   El formulario tiene un campo "website" que las personas no deben ver ni
+   rellenar: si llega relleno, lo ha hecho un bot y contact.php descarta el
+   envio. FALTABA ESTA REGLA, asi que el campo se estaba viendo en la pagina
+   como un input normal con el texto "No rellenes este campo".
+
+   No se usa display:none ni visibility:hidden a proposito: los bots modernos
+   los detectan y saltan el campo. Sacarlo de la pantalla con position
+   absolute es mas dificil de distinguir para ellos.
+
+   tabindex="-1" en el HTML ya lo saca del recorrido del tabulador, y
+   aria-hidden lo oculta a los lectores de pantalla: asi nadie que navegue con
+   teclado o lector cae en la trampa por error. */
+.honeypot {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Foco visible al navegar con teclado
+   ---------------------------------------------------------------------------
+   Varios elementos llevaban outline:none, lo que deja a quien navega con el
+   tabulador sin ninguna pista de donde esta. :focus-visible solo se activa con
+   teclado (no al hacer clic con el raton), asi que devuelve la accesibilidad
+   sin ensuciar el diseno para quien usa raton o pantalla tactil. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* El campo trampa nunca debe recibir foco visible aunque se le fuerce */
+.honeypot input:focus-visible {
+    outline: none;
+}
+
 .field-group input,
 .field-group textarea {
     width: 100%;
@@ -1088,6 +1294,14 @@ section {
     transform: translateX(100%);
 }
 
+/* El preloader tapa TODA la pantalla (z-index 9999) y quien lo retira es el JS
+   al dispararse el evento "load". Eso es un punto unico de fallo: si el JS no
+   llega a ejecutarse (error, bloqueador, o una imagen externa que nunca
+   termina), el visitante se queda ante una pantalla opaca para siempre y sin
+   forma de seguir.
+   Esta animacion es la red de seguridad: en CSS puro, sin depender de JS, el
+   preloader se desvanece solo a los 3 segundos. Si el JS funciona (lo normal),
+   le anade la clase .hidden mucho antes y esto ni se nota. */
 .preloader {
     position: fixed;
     inset: 0;
@@ -1097,11 +1311,24 @@ section {
     align-items: center;
     justify-content: center;
     transition: opacity 0.5s ease, visibility 0.5s ease;
+    animation: preloaderFailsafe 0.6s ease 3s forwards;
 }
+
+@keyframes preloaderFailsafe {
+    to {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
 .preloader.hidden {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    /* Anula la red de seguridad: si el JS ya lo ha ocultado, la animacion no
+       debe devolverlo a la vista al terminar. */
+    animation: none;
 }
 .preloader-logo {
     display: flex;
@@ -1144,7 +1371,9 @@ section {
     font-size: 0.75rem;
     background: white;
     padding: 0 0.4rem;
-    color: var(--accent);
+    /* --accent-text y no --accent: texto de 0.75rem sobre blanco, el acento
+       normal daba 4.2:1 (por debajo del 4.5 de AA). Ver contraste.py. */
+    color: var(--accent-text);
 }
 
 .scroll-top-btn {
@@ -1326,6 +1555,21 @@ section {
         animation: none !important;
         transition-duration: 0.01ms !important;
         transition-delay: 0ms !important;
+    }
+
+    /* EXCEPCION al "animation: none" de arriba. Esa regla apaga todas las
+       animaciones, y eso incluiria la red de seguridad que retira el preloader
+       cuando el JS falla. Resultado: quien reduce el movimiento se quedaria
+       atrapado ante una pantalla opaca, que es justo el fallo que queriamos
+       evitar. Aqui se restaura, pero instantanea (sin desvanecido), que es lo
+       que esa preferencia realmente pide: nada de movimiento, no "nada de
+       funcionar". */
+    .preloader {
+        animation: preloaderFailsafe 0.01ms linear 3s forwards !important;
+    }
+
+    .preloader.hidden {
+        animation: none !important;
     }
 
     .reveal-pending {

@@ -8,16 +8,40 @@
     <meta name="description" content="Txipi Txopo - Senderismo, rutas, fotos y viajes. Cuaderno de bitácora y archivo fotográfico de naturaleza, cumbres, pueblos y ciudades del mundo.">
     <meta name="google-site-verification" content="nTfslBj93-6w0wJ2aFi_P2JHpu-u5vvelVRzTTahyOQ">
     <meta name="msvalidate.01" content="554B829CCC4B114F6A362904CAA0F2CD">
+    <meta name="theme-color" content="#1e8b71">
+    <!-- Dominio canonico: txopo.lovestoblog.com.
+         ANTES apuntaba a txopo.pages.dev y eso perjudicaba el posicionamiento:
+         el sitemap.xml y el robots.txt listan URLs de lovestoblog, asi que
+         Google recibia dos senales contrarias ("la buena es pages.dev" contra
+         "indexa estas de lovestoblog") y repartia la autoridad entre los dos
+         dominios en vez de concentrarla en uno.
+         Ademas pages.dev NO sirve PHP, asi que el formulario de contacto solo
+         funciona en lovestoblog: es el que debe ser canonico. -->
     <link rel="canonical" href="https://txopo.lovestoblog.com/">
     <link rel="shortcut icon" href="favicon.png" type="image/png">
 
     <!-- Open Graph / Redes Sociales -->
+    <meta property="og:site_name" content="Txopo Txipi">
+    <meta property="og:locale" content="es_ES">
     <meta property="og:title" content="Txipi Txopo - Senderismo, rutas, fotos y viajes">
     <meta property="og:description" content="Cuaderno de bitácora y archivo fotográfico de naturaleza, cumbres, pueblos y ciudades. Más de 80 destinos explorados.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://txopo.lovestoblog.com/images/pic02.jpg">
+    <meta property="og:image:alt" content="Panorámica de la Reserva de la Biosfera de Urdaibai">
     <meta property="og:url" content="https://txopo.lovestoblog.com/">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Txipi Txopo - Senderismo, rutas, fotos y viajes">
+    <meta name="twitter:description" content="Cuaderno de bitácora y archivo fotográfico de naturaleza, cumbres, pueblos y ciudades.">
+    <meta name="twitter:image" content="https://txopo.lovestoblog.com/images/pic02.jpg">
+
+    <!-- Precarga del recurso critico del hero.
+         Se precarga el WebP (94 KB), NO el PNG (749 KB): el CSS sirve el WebP
+         mediante image-set(), asi que precargar el PNG descargaba los dos
+         archivos y tiraba 749 KB a la basura en cada visita.
+         El type="image/webp" es imprescindible: los navegadores que no entienden
+         WebP descartan esta precarga en lugar de bajar un archivo que no saben
+         mostrar, y reciben el PNG por la via normal del image-set(). -->
+    <link rel="preload" as="image" href="images/hero_urdaibai.webp" type="image/webp" fetchpriority="high">
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -26,8 +50,13 @@
       "@type": "WebSite",
       "name": "Txipi Txopo",
       "url": "https://txopo.lovestoblog.com/",
+      "inLanguage": "es-ES",
       "description": "Senderismo, rutas, fotos y viajes. Colección de galerías fotográficas de naturaleza y aventura.",
-      "image": "https://txopo.lovestoblog.com/images/pic02.jpg"
+      "image": "https://txopo.lovestoblog.com/images/pic02.jpg",
+      "author": {
+        "@type": "Person",
+        "name": "Txopo Txipi"
+      }
     }
     </script>
     <script type="application/ld+json">
@@ -63,12 +92,41 @@
         })(window, document, "clarity", "script", "jk6xa82oti");
     </script>
 
-    <!-- Estilos de Vanguardia -->
-    <link rel="stylesheet" href="assets/css/fontawesome-all.min.css">
+    <!-- Tipografías: se avisa antes con preconnect para que el navegador tenga
+         ya abiertas las conexiones cuando llegue la hoja de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- La hoja de Google Fonts ya NO bloquea el primer dibujado. Con
+         rel="stylesheet" normal, el navegador no pinta NADA de la página
+         hasta haber bajado esta hoja EXTERNA; si el servidor de Google tarda,
+         la página se queda en blanco ese tiempo. El patrón preload+onload
+         arranca la descarga igual de pronto pero deja seguir pintando, y
+         display=swap enseña el texto con la fuente de respaldo hasta que
+         llega la buena. El <noscript> restaura la carga normal si JavaScript
+         está desactivado.
+         PESOS PODADOS 2026-09-28 (auditoría de font-weight en el CSS):
+         se pedían Cormorant 500;600;700 y Manrope 400;500;600;700;800, pero
+         el diseño solo usa Cormorant 400 (comilla decorativa) y 700
+         (encabezados, negrita del navegador), y Manrope 400, 600, 700 y 800.
+         Sobraban Cormorant 500 y 600 y Manrope 500: tres archivos de fuente
+         menos que descargar. Si algún día usas un peso de esos, vuelvelo a
+         añadir aquí. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap">
+    </noscript>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="assets/css/icons.css">
     <link rel="stylesheet" href="assets/css/design-system.css">
 </head>
 
 <body>
+    <!-- Primer elemento de la pagina a proposito: quien navega con teclado o
+         lector de pantalla puede saltarse la cabecera y entrar directo al
+         contenido. Permanece oculto hasta que recibe el foco. -->
+    <a class="skip-link" href="#inicio">Saltar al contenido principal</a>
+
     <!-- Preloader animado -->
     <div id="preloader" class="preloader" aria-hidden="true">
         <div class="preloader-logo">
@@ -94,13 +152,13 @@
             </span>
         </a>
 
-        <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+        <button type="button" class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="siteNav">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <nav class="site-nav" id="siteNav">
+        <nav class="site-nav" id="siteNav" aria-label="Navegación principal">
             <a href="#destacados">Destacados</a>
             <a href="#archivo">Archivo</a>
             <a href="#historia">Historia</a>
@@ -171,7 +229,7 @@
                             <span>Luz atlántica en bajamar y pleamar</span>
                         </li>
                     </ul>
-                    <a href="https://txopo.lovestoblog.com/images/pic02.jpg" target="_blank" rel="noopener" class="text-link">Ver imagen en detalle</a>
+                    <a href="images/pic02.jpg" target="_blank" rel="noopener" class="text-link">Ver imagen en detalle</a>
                 </div>
             </div>
         </section>
@@ -206,16 +264,19 @@
                         <i class="icon solid fa-search" aria-hidden="true"></i>
                         <input type="search" id="journeySearch" placeholder="Buscar por ruta, monte, ciudad, fiesta..." autocomplete="off" aria-label="Buscar viaje">
                     </div>
-                    <div class="filter-chips">
-                        <button type="button" class="chip active" data-filter="all">Todo</button>
-                        <button type="button" class="chip" data-filter="rutas"><i class="icon solid fa-mountain" aria-hidden="true"></i> Rutas</button>
-                        <button type="button" class="chip" data-filter="ciudades"><i class="icon solid fa-city" aria-hidden="true"></i> Ciudades</button>
-                        <button type="button" class="chip" data-filter="fiestas"><i class="icon solid fa-music" aria-hidden="true"></i> Fiestas</button>
-                        <button type="button" class="chip" data-filter="exterior"><i class="icon solid fa-globe-europe" aria-hidden="true"></i> Exterior</button>
+                    <div class="filter-chips" role="group" aria-label="Filtrar destinos por categoría">
+                        <button type="button" class="chip active" data-filter="all" aria-pressed="true">Todo</button>
+                        <button type="button" class="chip" data-filter="rutas" aria-pressed="false"><i class="icon solid fa-mountain" aria-hidden="true"></i> Rutas</button>
+                        <button type="button" class="chip" data-filter="ciudades" aria-pressed="false"><i class="icon solid fa-city" aria-hidden="true"></i> Ciudades</button>
+                        <button type="button" class="chip" data-filter="fiestas" aria-pressed="false"><i class="icon solid fa-music" aria-hidden="true"></i> Fiestas</button>
+                        <button type="button" class="chip" data-filter="exterior" aria-pressed="false"><i class="icon solid fa-globe-europe" aria-hidden="true"></i> Exterior</button>
                     </div>
                 </div>
 
-                <p class="results-summary" id="resultsSummary">Cargando archivo de destinos...</p>
+                <!-- aria-live: al filtrar o escribir en el buscador, un lector de
+                     pantalla anuncia "X destinos encontrados" sin tener que
+                     recorrer la lista a ciegas para saber si el filtro funciono -->
+                <p class="results-summary" id="resultsSummary" aria-live="polite">Cargando archivo de destinos...</p>
                 <div class="archive-grid" id="journeyGrid" role="region" aria-label="Listado de destinos, área con desplazamiento" tabindex="0">
                     <!-- Poblado dinámicamente por app.js -->
                 </div>
@@ -278,32 +339,39 @@
                 </div>
 
                 <div class="contact-form-shell">
-                    <form action="contact.php" method="POST" accept-charset="UTF-8" id="contact-form" class="contact-form">
+                    <form action="contact.php" method="POST" accept-charset="UTF-8" id="contact-form" class="contact-form" novalidate>
+                        <!-- Token CSRF: lo rellena el script del final de la pagina -->
                         <input type="hidden" name="csrf_token" id="csrf_token" value="">
-                        
+
                         <div class="form-grid">
                             <div class="field-group floating-label">
-                                <input type="text" id="name" name="visitor_name" placeholder=" " required pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$">
+                                <input type="text" id="name" name="visitor_name" placeholder=" " required minlength="2" maxlength="80" autocomplete="name">
                                 <label for="name">Tu nombre</label>
                             </div>
 
                             <div class="field-group floating-label">
-                                <input type="email" id="email" name="visitor_email" placeholder=" " required>
+                                <input type="email" id="email" name="visitor_email" placeholder=" " required maxlength="120" autocomplete="email">
                                 <label for="email">Tu correo electrónico</label>
                             </div>
                         </div>
 
                         <div class="field-group floating-label">
-                            <input type="text" id="title1" name="email_title" placeholder=" " required pattern="^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$">
+                            <input type="text" id="title1" name="email_title" placeholder=" " required minlength="3" maxlength="120">
                             <label for="title1">¿En qué te puedo ayudar? (Asunto)</label>
                         </div>
 
                         <div class="field-group floating-label">
-                            <textarea id="message" name="visitor_message" rows="4" placeholder=" " required></textarea>
+                            <textarea id="message" name="visitor_message" rows="4" placeholder=" " required minlength="10" maxlength="2000"></textarea>
                             <label for="message">Escribe tu mensaje...</label>
                         </div>
 
-                        <button type="submit" class="primary-button">
+                        <!-- Trampa antispam: invisible para personas, tentadora para bots -->
+                        <div class="honeypot" aria-hidden="true">
+                            <label for="website">No rellenes este campo</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <button type="submit" class="primary-button" id="submitBtn">
                             <i class="icon solid fa-paper-plane" aria-hidden="true"></i> &nbsp;Lanzar botella
                         </button>
 
@@ -325,18 +393,32 @@
         <i class="icon solid fa-arrow-up" aria-hidden="true"></i>
     </button>
 
-    <!-- Token CSRF dinámico para mayor seguridad -->
+    <!-- Token CSRF: se pide al cargar y se puede refrescar tras cada envio -->
     <script>
-        fetch('get_token.php')
-            .then(function(res){ return res.json(); })
-            .then(function(data){
-                var csrfToken = data && (data.csrf_token || data.token);
-                if (csrfToken) {
-                    var tokenInput = document.getElementById('csrf_token');
-                    if (tokenInput) tokenInput.value = csrfToken;
-                }
-            })
-            .catch(function(){});
+        window.txopoRefreshCsrf = (function () {
+            var field = document.getElementById('csrf_token');
+            if (!field) {
+                return function () { return Promise.resolve(''); };
+            }
+
+            /* cache: no-store es imprescindible: si el navegador reutiliza una
+               respuesta cacheada, el token puede ser de una sesion ya caducada
+               y contact.php responderia 403. */
+            return function refresh() {
+                return fetch('get_token.php', { credentials: 'same-origin', cache: 'no-store' })
+                    .then(function (res) { return res.ok ? res.json() : null; })
+                    .then(function (data) {
+                        var token = data && (data.csrf_token || data.token);
+                        if (token) {
+                            field.value = token;
+                        }
+                        return field.value;
+                    })
+                    .catch(function () { return ''; });
+            };
+        })();
+
+        window.txopoCsrfToken = window.txopoRefreshCsrf();
     </script>
 
     <!-- Scripts de la Aplicación -->

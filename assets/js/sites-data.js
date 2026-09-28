@@ -3,42 +3,48 @@ window.txopoSiteData = {
         {
             "title": "Panticosa",
             "href": "Panticosa/index.html",
-            "image": "Panticosa/fotos/1.jpg",
+            "image": "images/cards/panticosa.jpg",
+            "imageWebp": "images/cards/panticosa.webp",
             "tag": "Alta montana",
             "description": "Pirineo aragones, aire fino y una escapada que funciona como postal de altura."
         },
         {
             "title": "Karlovy Vary",
             "href": "Karlovy Vary/index.html",
-            "image": "Karlovy Vary/fotos/1.jpg",
+            "image": "images/cards/karlovy-vary.jpg",
+            "imageWebp": "images/cards/karlovy-vary.webp",
             "tag": "Ciudad termal",
             "description": "Arquitectura elegante, color y ritmo centroeuropeo en un viaje con mucha textura visual."
         },
         {
             "title": "Amboto",
             "href": "Amboto/index.html",
-            "image": "Amboto/fotos/IMG20220125130837-min.jpg",
+            "image": "images/cards/amboto.jpg",
+            "imageWebp": "images/cards/amboto.webp",
             "tag": "Ruta vasca",
             "description": "Montana cercana, caracter y horizonte limpio para quien entra buscando sendero."
         },
         {
             "title": "Semana Santa 2024",
             "href": "Semana Santa 2024/index.html",
-            "image": "Semana Santa 2024/fotos/01.jpg",
+            "image": "images/cards/semana-santa-2024.jpg",
+            "imageWebp": "images/cards/semana-santa-2024.webp",
             "tag": "Cuaderno urbano",
             "description": "Una subweb intensa en fotos y video, perfecta para mostrar la variedad del archivo."
         },
         {
             "title": "Buitrago",
             "href": "Buitrago/index.html",
-            "image": "Buitrago/fotos/20220212_130413-min.jpg",
+            "image": "images/cards/buitrago.jpg",
+            "imageWebp": "images/cards/buitrago.webp",
             "tag": "Escapada historica",
             "description": "Piedra, agua y paseo tranquilo en una de esas jornadas que piden volver con calma."
         },
         {
             "title": "\u010cesk\u00fd Krumlov",
             "href": "\u010cesk\u00fd Krumlov/index.html",
-            "image": "\u010cesk\u00fd Krumlov/fotos/1.jpg",
+            "image": "images/cards/cesky-krumlov.jpg",
+            "imageWebp": "images/cards/cesky-krumlov.webp",
             "tag": "Postal europea",
             "description": "Calles, ribera y atmosfera de cuento para cerrar la seleccion con una ciudad memorable."
         }

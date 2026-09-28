@@ -39,18 +39,37 @@
         });
     }
 
+    /* Los datos de sites-data.js pueden venir con "mojibake" (UTF-8 leido como
+       Latin-1: "Ã±" en lugar de "ñ"). Aqui se reconstruyen los bytes originales
+       y se vuelven a decodificar como UTF-8.
+       Antes se hacia con escape()/decodeURIComponent(), pero escape() esta
+       obsoleto y no existe en todos los entornos. */
+    const utf8Decoder = (function () {
+        try {
+            return new TextDecoder("utf-8", { fatal: true });
+        } catch (error) {
+            return null;
+        }
+    })();
+
     function repairMojibake(value) {
         if (typeof value !== "string") {
             return value;
         }
 
-        if (!/[\u00c2\u00c3\u00c4]/.test(value)) {
+        if (!utf8Decoder || !/[\u00c2\u00c3\u00c4]/.test(value)) {
             return value;
         }
 
+        const bytes = new Uint8Array(value.length);
+        for (let index = 0; index < value.length; index += 1) {
+            bytes[index] = value.charCodeAt(index) & 0xff;
+        }
+
         try {
-            return decodeURIComponent(escape(value));
+            return utf8Decoder.decode(bytes);
         } catch (error) {
+            /* Secuencia invalida: no era mojibake, se deja el texto original. */
             return value;
         }
     }
@@ -115,10 +134,15 @@
             title: repairMojibake(entry.title),
             href: normalizeHref(entry.href),
             image: normalizeHref(entry.image),
+            /* Version WebP de la miniatura (opcional). Si existe, la tarjeta
+               se pinta con <picture> y el navegador elige el WebP; si no,
+               cae al .jpg normal. Se generan con generar_thumbs.py. */
+            imageWebp: normalizeHref(entry.imageWebp || ""),
             tag: repairMojibake(entry.tag),
             description: repairMojibake(entry.description),
             safeHref: encodeURI(normalizeHref(entry.href)),
-            safeImage: encodeURI(normalizeHref(entry.image))
+            safeImage: encodeURI(normalizeHref(entry.image)),
+            safeImageWebp: entry.imageWebp ? encodeURI(normalizeHref(entry.imageWebp)) : ""
         };
     }
 
@@ -136,10 +160,22 @@
         }
 
         featuredGrid.innerHTML = featuredDestinations.map(function (item, index) {
+            /* La imagen va en un <picture> cuando hay version WebP: los
+               navegadores que entienden WebP (practicamente todos) bajan la
+               miniatura ligera y el resto usa el .jpg de respaldo. Sin este
+               envoltorio no habria forma de ofrecer WebP con garantia de
+               respaldo en una etiqueta <img> normal. */
+            const mediaHtml = item.safeImageWebp
+                ? '<picture>' +
+                  '<source type="image/webp" srcset="' + escapeHtml(item.safeImageWebp) + '">' +
+                  '<img src="' + escapeHtml(item.safeImage) + '" alt="Fotografia de ' + escapeHtml(item.title) + '" loading="lazy" decoding="async">' +
+                  '</picture>'
+                : '<img src="' + escapeHtml(item.safeImage) + '" alt="Fotografia de ' + escapeHtml(item.title) + '" loading="lazy" decoding="async">';
+
             return [
-                '<a class="featured-card" href="' + escapeHtml(item.safeHref) + '" target="_blank" rel="noopener" data-aos="zoom-in-up" data-aos-delay="' + (index * 150) + '">',
+                '<a class="featured-card" href="' + escapeHtml(item.safeHref) + '" target="_blank" rel="noopener" style="--card-delay:' + (index * 110) + 'ms">',
                 '  <span class="featured-media">',
-                '    <img src="' + escapeHtml(item.safeImage) + '" alt="Fotografia de ' + escapeHtml(item.title) + '" loading="lazy" decoding="async">',
+                '    ' + mediaHtml,
                 "  </span>",
                 '  <span class="featured-content">',
                 '    <span class="featured-meta">' + escapeHtml(item.tag) + "</span>",
@@ -272,6 +308,11 @@
                 state.filter = button.getAttribute("data-filter") || "all";
                 filterButtons.forEach(function (item) {
                     item.classList.toggle("active", item === button);
+                    /* aria-pressed hace que un lector de pantalla anuncie el
+                       estado del filtro (pulsado / no pulsado). Sin esto, la
+                       clase "active" es solo visual y quien navega con lector
+                       no sabe si el filtro cambio. */
+                    item.setAttribute("aria-pressed", String(item === button));
                 });
                 state.visible = EXPAND_STEP;
                 renderJourneys();
@@ -308,6 +349,10 @@
             navToggle.addEventListener("click", function () {
                 const isOpen = document.body.classList.toggle("nav-open");
                 navToggle.setAttribute("aria-expanded", String(isOpen));
+                /* El nombre cambia con el estado: "Abrir menu" cerrado,
+                   "Cerrar menu" abierto. Con solo aria-expanded, el lector
+                   anuncia el estado pero el nombre queda incongruente. */
+                navToggle.setAttribute("aria-label", isOpen ? "Cerrar menú de navegación" : "Abrir menú de navegación");
             });
         }
 
@@ -479,31 +524,86 @@
             });
         });
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (!validate()) return;
+        const tokenField = form.querySelector('#csrf_token');
+        const submitBtn = document.getElementById('submitBtn');
+        let sending = false;
 
-            const tokenField = form.querySelector('#csrf_token');
-            if (tokenField) {
-                tokenField.name = 'csrf_token';
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (sending || !validate()) {
+                return;
             }
 
-            const formData = new FormData(form);
-            formData.set('ajax', '1');
-
+            sending = true;
+            if (submitBtn) {
+                submitBtn.disabled = true;
+            }
             setFeedback("Enviando mensaje...", "is-success");
-            fetch(form.action, { method: 'POST', body: formData })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        feedback.innerHTML = `<div class="success-message">¡Mensaje enviado con éxito! Gracias por escribir.</div>`;
+
+            /* El token CSRF se pide al cargar la pagina, pero puede no haber
+               llegado todavia (o haberse caducado la sesion). Se espera aqui,
+               ya que sin el contacto.php responde siempre 403. */
+            const tokenReady = (window.txopoCsrfToken || Promise.resolve(''))
+                .catch(function () { return ''; })
+                .then(function (token) {
+                    if (tokenField && token) {
+                        tokenField.value = token;
+                    }
+                });
+
+            tokenReady
+                .then(function () {
+                    const formData = new FormData(form);
+                    formData.set('ajax', '1');
+                    return fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                })
+                .then(function (response) {
+                    /* 404/405 significan que el endpoint PHP no existe donde se
+                       esta sirviendo la pagina (alojamiento estatico sin PHP).
+                       En ese caso es mejor ofrecer el correo directo que un
+                       error tecnico que el visitante no puede resolver. */
+                    if (response.status === 404 || response.status === 405) {
+                        return { success: false, sinServidor: true };
+                    }
+                    return response.json().catch(function () {
+                        return { success: false, message: 'respuesta no válida del servidor' };
+                    });
+                })
+                .then(function (data) {
+                    if (data && data.success) {
+                        feedback.classList.remove("is-error");
+                        feedback.classList.add("is-success");
+                        feedback.innerHTML = '<div class="success-message">¡Mensaje enviado con éxito! Gracias por escribir.</div>';
                         form.reset();
+                        /* reset() devuelve los campos a su valor del HTML, que en
+                           el token es vacio: hay que volver a ponerlo. */
+                        if (tokenField) {
+                            tokenField.value = "";
+                        }
+                        if (typeof window.txopoRefreshCsrf === 'function') {
+                            window.txopoRefreshCsrf();
+                        }
+                    } else if (data && data.sinServidor) {
+                        setFeedback("", null);
+                        feedback.classList.add("is-error");
+                        feedback.innerHTML = '<div>Ahora mismo no se puede enviar el mensaje desde aquí. Escríbeme directamente a <a href="mailto:tkplts@gmail.com">tkplts@gmail.com</a>.</div>';
                     } else {
-                        setFeedback("Hubo un problema al enviar: " + (data.message || "inténtalo de nuevo"), "is-error");
+                        setFeedback("Hubo un problema al enviar: " + ((data && data.message) || "inténtalo de nuevo"), "is-error");
                     }
                 })
-                .catch(() => {
+                .catch(function () {
                     setFeedback("Error de conexión al enviar el mensaje.", "is-error");
+                })
+                .then(function () {
+                    sending = false;
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                    }
                 });
         });
     }
@@ -529,8 +629,13 @@
     function setupTypewriter() {
         const el = document.querySelector('.typewriter');
         if (!el || reduceMotion) return;
-        
+
         const text = el.textContent;
+        /* El efecto vacia el h1 y escribe letra a letra: un lector de pantalla
+           se encontraria un titular vacio y luego un ruido de actualizaciones
+           caoticas. aria-label fija el nombre accesible al texto completo,
+           asi el lector lo lee de una vez y el efecto visual sigue igual. */
+        el.setAttribute('aria-label', text);
         el.textContent = '';
         // Mostramos el elemento por si estaba oculto y añadimos cursor por CSS
         el.classList.add('is-typing');

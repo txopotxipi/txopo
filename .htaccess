@@ -1,38 +1,117 @@
-# Forzar HTTPS
-RewriteEngine On
-RewriteCond %{HTTP:X-Forwarded-Proto} !https [OR]
-RewriteCond %{HTTPS} off
-RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Definir la página predeterminada
-DirectoryIndex index.html
-
-# Configuración de PHP - PRODUCCIÓN
-php_value display_errors Off
-php_value mbstring.http_input auto
-php_value date.timezone Europe/Madrid
-
-# Headers de Seguridad
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-</IfModule>
-
-# Proteger archivos de configuración PHP (acceso directo bloqueado)
-<FilesMatch "^(db|csrf_utils|db_config)\.php$">
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
-    <IfModule !mod_authz_core.c>
-        Order deny,allow
-        Deny from all
-    </IfModule>
-</FilesMatch>
-
-# Proteger carpeta config
-<IfModule mod_rewrite.c>
-    RewriteRule ^config/ - [F,L]
-</IfModule>
+# ===========================================================================
+#  Txopo Txipi - configuracion de Apache
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# Forzar HTTPS
+# ---------------------------------------------------------------------------
+# OJO con el orden de estas condiciones: van unidas con AND (implicito).
+# Antes estaban unidas con OR, y eso rompia los servidores que terminan el SSL
+# ellos mismos (sin cabecera X-Forwarded-Proto): "X-Forwarded-Proto != https"
+# era cierto incluso estando ya en HTTPS, asi que el navegador entraba en un
+# bucle infinito de redirecciones. Con AND, solo se redirige cuando las dos
+# condiciones dicen a la vez que la peticion ha llegado por HTTP.
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Definir la pagina predeterminada
+DirectoryIndex index.html
+
+# ---------------------------------------------------------------------------
+# PHP - PRODUCCION
+# ---------------------------------------------------------------------------
+<IfModule mod_php.c>
+    php_value display_errors Off
+    php_value mbstring.http_input auto
+    php_value date.timezone Europe/Madrid
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Compresion: recorta en torno al 70% el peso de HTML, CSS y JS
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE application/xml image/svg+xml
+    # Los navegadores muy antiguos se atragantan con la compresion
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Cache del navegador
+# ---------------------------------------------------------------------------
+<IfModule mod_expires.c>
+    ExpiresActive On
+    # El HTML no se cachea nunca: asi los cambios se ven al recargar
+    ExpiresByType text/html "access plus 0 seconds"
+    # Las imagenes son el grueso del sitio y practicamente no cambian
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    # Hojas de estilo, scripts y tipografias
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Cabeceras de seguridad
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # X-XSS-Protection ya no se pone: esta obsoleto en todos los navegadores
+    # actuales y en los antiguos su filtro podia introducir fallos de seguridad.
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Proteger archivos de configuracion PHP (acceso directo bloqueado)
+# get_token.php NO se bloquea a proposito: el formulario necesita pedirle el
+# token CSRF. No expone nada, solo devuelve el token de la propia sesion.
+# ---------------------------------------------------------------------------
+<FilesMatch "^(db|csrf_utils|db_config)\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ---------------------------------------------------------------------------
+# Los scripts de mantenimiento y la documentacion no deben poder descargarse
+# ---------------------------------------------------------------------------
+<FilesMatch "\.(py|ps1|bat|cmd|sh|md|log|bak|old|ini|yml|yaml|sql|json)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ---------------------------------------------------------------------------
+# Proteger carpeta config y evitar listados de directorio
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteRule ^config/ - [F,L]
+</IfModule>
+
+<IfModule mod_autoindex.c>
+    IndexIgnore *
+</IfModule>
