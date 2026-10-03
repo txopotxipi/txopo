@@ -32,6 +32,10 @@ tmp/
 # el formulario quedaba roto en cualquier despliegue hecho con git.
 config/db_config.php
 db.php
+# Configuracion del buzon privado (mensajes.php): la clave del panel y el
+# registro de intentos fallidos NUNCA van al repositorio, que es publico.
+config/panel_config.php
+config/panel_intentos.json
 **/save_message.php
 **/submit.php
 **/*password*
