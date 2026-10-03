@@ -15,17 +15,22 @@
  * -------------
  * Hay dos modos, por orden de preferencia:
  *
- *   1. RECOMENDADO — contraseña propia del panel. Se define una sola vez en
- *      db.php (o en config/panel_config.php) así:
+ *   1. RECOMENDADO — contraseña propia del panel. Se define en
+ *      config/panel_config.php así:
  *
  *          $CLAVE_PANEL_HASH = '$2y$10$........................';
  *
  *      El valor se genera con password_hash('tu-contraseña', PASSWORD_DEFAULT)
  *      y NUNCA se escribe la contraseña en claro en ningún sitio.
+ *      No hace falta crearlo a mano: entra una vez con la contraseña de MySQL y
+ *      usa la opción «Contraseña del buzón» que aparece dentro del panel.
  *
- *   2. PROVISIONAL — si no hay $CLAVE_PANEL_HASH, se entra con la propia
+ *   2. PROVISIONAL — si no hay config/panel_config.php, se entra con la propia
  *      contraseña de MySQL (la de db.php). Sirve para empezar a usarlo sin
  *      tocar nada, pero lo suyo es pasar al modo 1.
+ *
+ * Si algún día se olvida la contraseña del panel: borrar config/panel_config.php
+ * desde el File Manager del hosting y se vuelve al modo 2 (la de MySQL).
  *
  * Seguridad
  * ---------
@@ -117,6 +122,51 @@ function clave_correcta($introducida)
     // Modo provisional: la contraseña de MySQL, comparada sin filtrar tiempos.
     return isset($passworddb) && is_string($passworddb) && $passworddb !== ''
         && hash_equals($passworddb, $introducida);
+}
+
+/**
+ * Guarda la contraseña propia del panel (cifrada) en config/panel_config.php.
+ * Devuelve true si se ha podido escribir.
+ */
+function guardar_clave_panel($nueva)
+{
+    $dir = __DIR__ . '/config';
+    if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
+        return false;
+    }
+    if (!is_dir($dir) || !is_writable($dir)) {
+        return false;
+    }
+
+    $hash = password_hash($nueva, PASSWORD_DEFAULT);
+    if (!is_string($hash) || $hash === '') {
+        return false;
+    }
+
+    // El hash bcrypt solo lleva [./A-Za-z0-9$], así que va seguro entre comillas
+    // simples. Aun así, si apareciera una comilla, abortamos.
+    if (strpos($hash, "'") !== false || strpos($hash, '\\') !== false) {
+        return false;
+    }
+
+    $contenido = "<?php\n"
+        . "// Contrasena del buzon privado (mensajes.php).\n"
+        . "// Generada desde el propio panel el " . date('Y-m-d H:i:s') . ".\n"
+        . "// NO va al repositorio: esta en .gitignore.\n"
+        . "// Si se olvida: borrar este fichero desde el File Manager del hosting\n"
+        . "// y se vuelve a entrar con la contrasena de MySQL (modo provisional).\n"
+        . "\$CLAVE_PANEL_HASH = '" . $hash . "';\n";
+
+    // Escritura atomica: primero un temporal, luego se renombra.
+    $temporal = $dir . '/.panel_config.' . bin2hex(random_bytes(4)) . '.tmp';
+    if (@file_put_contents($temporal, $contenido, LOCK_EX) === false) {
+        return false;
+    }
+    if (!@rename($temporal, $dir . '/panel_config.php')) {
+        @unlink($temporal);
+        return false;
+    }
+    return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -288,7 +338,22 @@ if ($autenticado && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accio
         $accion = (string) $_POST['accion'];
         $id     = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 
-        if ($accion === 'preparar') {
+        if ($accion === 'cambiar_clave') {
+            $nueva1 = isset($_POST['nueva']) ? (string) $_POST['nueva'] : '';
+            $nueva2 = isset($_POST['nueva2']) ? (string) $_POST['nueva2'] : '';
+
+            if (strlen($nueva1) < 10) {
+                $aviso = 'La contraseña nueva debe tener al menos 10 caracteres.';
+            } elseif (!hash_equals($nueva1, $nueva2)) {
+                $aviso = 'Las dos contraseñas nuevas no coinciden.';
+            } elseif (guardar_clave_panel($nueva1)) {
+                $modoClave = 'panel';
+                $aviso = 'Contraseña del buzón guardada. A partir de ahora se entra con ella (no con la de la base de datos).';
+                $tipoAviso = 'ok';
+            } else {
+                $aviso = 'No se ha podido guardar la contraseña. Comprueba que la carpeta config/ existe y se puede escribir.';
+            }
+        } elseif ($accion === 'preparar') {
             if ($tieneLeido) {
                 $aviso = 'La base de datos ya estaba preparada.';
                 $tipoAviso = 'ok';
@@ -550,6 +615,32 @@ function url_pagina($p)
     }
     .paginacion span.actual { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
     .vacio { padding: 2.5rem 1.25rem; text-align: center; color: var(--muted); }
+    details.ajustes {
+        margin-top: 1rem;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    details.ajustes > summary {
+        cursor: pointer; padding: .85rem 1.25rem; font-weight: 700;
+        list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center;
+    }
+    details.ajustes > summary::-webkit-details-marker { display: none; }
+    details.ajustes > summary::before { content: "\25B8"; color: var(--accent); font-weight: 400; }
+    details.ajustes[open] > summary::before { content: "\25BE"; }
+    details.ajustes > summary:hover { background: #fbfaf7; }
+    .ajustes-cuerpo { padding: .25rem 1.25rem 1.25rem; border-top: 1px solid var(--line); }
+    .ajustes-cuerpo p { margin: .9rem 0; font-size: .93rem; }
+    .ajustes-cuerpo .campo { margin: .7rem 0; max-width: 340px; }
+    .ajustes-cuerpo input[type=password] { max-width: 340px; }
+    .ajustes-cuerpo button.principal { width: auto; margin-top: .4rem; padding: .6rem 1.1rem; }
+    .nota { color: var(--muted); font-size: .85rem; line-height: 1.5; }
+    .modo {
+        display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+        text-transform: uppercase; padding: .1rem .45rem; border-radius: 999px;
+        background: rgba(47,118,109,.10); color: var(--accent-dark); border: 1px solid rgba(47,118,109,.28);
+    }
     .pie { color: var(--muted); font-size: .82rem; text-align: center; padding: 1.25rem 0 2rem; }
     .pie a { color: var(--muted); }
     @media (max-width: 560px) {
@@ -698,6 +789,51 @@ function url_pagina($p)
         <?php endif; ?>
 
     </div>
+
+    <details class="ajustes">
+        <summary>
+            Contraseña del buzón
+            <span class="modo">
+                <?php echo $modoClave === 'panel' ? 'Contraseña propia' : 'Usando la de MySQL'; ?>
+            </span>
+        </summary>
+        <div class="ajustes-cuerpo">
+
+            <?php if ($modoClave === 'panel'): ?>
+                <p>Ahora mismo entras con <strong>la contraseña propia del buzón</strong>, que es independiente
+                de la de la base de datos. Puedes cambiarla aquí cuando quieras.</p>
+            <?php else: ?>
+                <p>Ahora mismo entras con <strong>la contraseña de la base de datos</strong>. Te recomendamos
+                poner una propia: así podrás cambiar la de MySQL cuando quieras sin quedarte fuera del buzón.</p>
+            <?php endif; ?>
+
+            <form method="post" action="mensajes.php" autocomplete="off">
+                <input type="hidden" name="csrf" value="<?php echo e($csrf); ?>">
+                <input type="hidden" name="accion" value="cambiar_clave">
+
+                <div class="campo">
+                    <label for="nueva">Contraseña nueva (mínimo 10 caracteres)</label>
+                    <input type="password" id="nueva" name="nueva" minlength="10" required autocomplete="new-password">
+                </div>
+
+                <div class="campo">
+                    <label for="nueva2">Repítela</label>
+                    <input type="password" id="nueva2" name="nueva2" minlength="10" required autocomplete="new-password">
+                </div>
+
+                <button type="submit" class="principal">Guardar contraseña</button>
+            </form>
+
+            <p class="nota">
+                La contraseña se guarda <strong>cifrada</strong> (bcrypt) en <code>config/panel_config.php</code>,
+                un fichero que no está en el repositorio y al que no se puede acceder desde el navegador.
+                Nadie puede leerla, ni siquiera desde el servidor.<br>
+                <strong>Si algún día la olvidas:</strong> borra <code>config/panel_config.php</code> desde el
+                File Manager de InfinityFree y volverás a entrar con la contraseña de la base de datos.
+            </p>
+
+        </div>
+    </details>
 
     <div class="pie">
         Buzón privado · <?php echo (int) $total; ?> mensaje<?php echo $total === 1 ? '' : 's'; ?> en total ·
