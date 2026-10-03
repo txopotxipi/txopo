@@ -4,6 +4,7 @@
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+.ftp-deploy-sync-state.json
 
 # VS Code
 .vscode/
@@ -23,11 +24,14 @@ tmp/
 # XAMPP/Local
 /xampp/
 
-# Security - Sensitive Credentials
+# Security - Credenciales de la base de datos.
+# Solo se excluyen los ficheros que contienen la contrasena de MySQL.
+# OJO: get_token.php y csrf_utils.php NO se excluyen a proposito. El formulario
+# de contacto los necesita para funcionar y no guardan ningun secreto: solo
+# gestionan el token CSRF de la propia sesion. Si se excluian del repositorio,
+# el formulario quedaba roto en cualquier despliegue hecho con git.
 config/db_config.php
 db.php
-csrf_utils.php
-get_token.php
 **/save_message.php
 **/submit.php
 **/*password*
