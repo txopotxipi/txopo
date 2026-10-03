@@ -3,48 +3,42 @@ window.txopoSiteData = {
         {
             "title": "Panticosa",
             "href": "Panticosa/index.html",
-            "image": "images/cards/panticosa.jpg",
-            "imageWebp": "images/cards/panticosa.webp",
+            "image": "Panticosa/fotos/1.jpg",
             "tag": "Alta montana",
             "description": "Pirineo aragones, aire fino y una escapada que funciona como postal de altura."
         },
         {
             "title": "Karlovy Vary",
             "href": "Karlovy Vary/index.html",
-            "image": "images/cards/karlovy-vary.jpg",
-            "imageWebp": "images/cards/karlovy-vary.webp",
+            "image": "Karlovy Vary/fotos/1.jpg",
             "tag": "Ciudad termal",
             "description": "Arquitectura elegante, color y ritmo centroeuropeo en un viaje con mucha textura visual."
         },
         {
             "title": "Amboto",
             "href": "Amboto/index.html",
-            "image": "images/cards/amboto.jpg",
-            "imageWebp": "images/cards/amboto.webp",
+            "image": "Amboto/fotos/IMG20220125130837-min.jpg",
             "tag": "Ruta vasca",
             "description": "Montana cercana, caracter y horizonte limpio para quien entra buscando sendero."
         },
         {
             "title": "Semana Santa 2024",
             "href": "Semana Santa 2024/index.html",
-            "image": "images/cards/semana-santa-2024.jpg",
-            "imageWebp": "images/cards/semana-santa-2024.webp",
+            "image": "Semana Santa 2024/fotos/01.jpg",
             "tag": "Cuaderno urbano",
             "description": "Una subweb intensa en fotos y video, perfecta para mostrar la variedad del archivo."
         },
         {
             "title": "Buitrago",
             "href": "Buitrago/index.html",
-            "image": "images/cards/buitrago.jpg",
-            "imageWebp": "images/cards/buitrago.webp",
+            "image": "Buitrago/fotos/20220212_130413-min.jpg",
             "tag": "Escapada historica",
             "description": "Piedra, agua y paseo tranquilo en una de esas jornadas que piden volver con calma."
         },
         {
             "title": "\u010cesk\u00fd Krumlov",
             "href": "\u010cesk\u00fd Krumlov/index.html",
-            "image": "images/cards/cesky-krumlov.jpg",
-            "imageWebp": "images/cards/cesky-krumlov.webp",
+            "image": "\u010cesk\u00fd Krumlov/fotos/1.jpg",
             "tag": "Postal europea",
             "description": "Calles, ribera y atmosfera de cuento para cerrar la seleccion con una ciudad memorable."
         }
@@ -124,15 +118,6 @@ window.txopoSiteData = {
         { "href": "https://txopo13.lovestoblog.com/Alpujarra/index.html", "title": "Alpujarra" },
         { "href": "https://txopo13.lovestoblog.com/Venecia/index.html", "title": "Venecia" },
         { "href": "https://txopo13.lovestoblog.com/R\u00e1vena/index.php", "title": "R\u00e1vena" },
-        { "href": "https://txopo13.lovestoblog.com/LAPONIA/index.php", "title": "Laponia" },
-        { "href": "https://kotor1.pages.dev/", "title": "Kotor" },
-        { "href": "https://dubrovnik.pages.dev/", "title": "Dubrovnik" },
-        { "href": "https://split1.pages.dev/", "title": "Split" },
-        { "href": "https://zadar.pages.dev/", "title": "Zadar" },
-        { "href": "https://budva.pages.dev/", "title": "Budva" },
-        { "href": "https://mostar1.pages.dev/", "title": "Mostar" },
-        { "href": "https://trogir.pages.dev/", "title": "Trogir" },
-        { "href": "https://zagreb.pages.dev/", "title": "Zagreb" },
-        { "href": "https://plitvice.pages.dev/", "title": "Plitvice" }
+        { "href": "https://txopo13.lovestoblog.com/LAPONIA/index.php", "title": "Laponia" }
     ]
 };
